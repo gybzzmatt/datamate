@@ -652,6 +652,14 @@ section { position: relative; }
   font-size: 20px; line-height: 1.75; color: var(--muted);
   max-width: 680px; margin: 0 auto 48px;
 }
+.insight-support {
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(236,240,255,0.72);
+  max-width: 760px;
+  margin: 0 auto 24px;
+}
+.insight-cta-wrap { margin-bottom: 28px; }
 .insight-data-note {
   font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.12em;
   color: var(--cyan); border: 1px solid var(--border);
@@ -918,7 +926,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </ul>
       <div class="nav-cta">
         <span class="nav-partner">DataRobot LatAm Partner</span>
-        <a href="#contact" class="btn btn-mint">Ver Demo &rarr;</a>
+        <a href="https://calendar.app.google/RGbMFkhDrxdj8udg7" target="_blank" rel="noopener noreferrer" class="btn btn-mint">Ver Demo &rarr;</a>
       </div>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir men&uacute;">
         <span></span><span></span><span></span>
@@ -1186,7 +1194,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </div>
     </div>
     <div class="how-cta reveal">
-      <a href="#contact" class="btn btn-mint btn-lg">Empezar con el diagn&oacute;stico gratuito <span class="arrow-icon">&rarr;</span></a>
+      <a href="https://calendar.app.google/RGbMFkhDrxdj8udg7" target="_blank" rel="noopener noreferrer" class="btn btn-mint btn-lg">Empezar con el diagn&oacute;stico gratuito <span class="arrow-icon">&rarr;</span></a>
     </div>
   </div>
 </section>
@@ -1272,6 +1280,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
     <p class="insight-body reveal">
       Mientras el mundo debate si la IA eliminar&aacute; empleos, la evidencia muestra algo diferente: mientras m&aacute;s avanzada es la IA, m&aacute;s necesita del expertise humano para mejorar. DataMate es donde ese expertise vive.
     </p>
+    <p class="insight-support reveal">
+      &iquest;Te gustar&iacute;a formar parte de esta red de humanos validadores y ganar dinero en paralelo entrenando IA en proyectos reales como los de Anthropic?
+    </p>
+    <div class="insight-cta-wrap reveal">
+      <a href="https://forms.gle/3h5bWU6j11FWubn96" target="_blank" rel="noopener noreferrer" class="btn btn-mint btn-lg">Form Inscripci&oacute;n EC&rsquo;s</a>
+    </div>
     <div class="reveal">
       <span class="insight-data-note">
         Metodolog&iacute;a: RLHF &mdash; Aprendizaje por Refuerzo con Retroalimentaci&oacute;n Humana
@@ -1428,17 +1442,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <ul class="footer-links">
           <li><a href="#">Sobre Nosotros</a></li>
           <li><a href="#">Blog de IA</a></li>
-          <li><a href="#">Podcast: IA a la Z</a></li>
-          <li><a href="#">EffinData Platform</a></li>
+          <li><a href="https://open.spotify.com/show/3RCxORWZS7B7LsFJwXeF26?si=f97c3aad801941b1" target="_blank" rel="noopener noreferrer">Podcast: IA a la Z</a></li>
+          <li><a href="https://effindata.com/auth" target="_blank" rel="noopener noreferrer">EffinData Platform</a></li>
         </ul>
       </div>
       <div>
         <p class="footer-col-title">Contacto</p>
         <ul class="footer-links">
-          <li><a href="mailto:hola@datamate.ai">hola@datamate.ai</a></li>
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="#contact">Agendar llamada &rarr;</a></li>
-          <li><a href="#">C&aacute;mara Chilena de IA</a></li>
+          <li><a href="mailto:hello@datamate.cl">hello@datamate.cl</a></li>
+          <li><a href="https://www.linkedin.com/company/datamate-latam/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href="https://calendar.app.google/RGbMFkhDrxdj8udg7" target="_blank" rel="noopener noreferrer">Agendar llamada &rarr;</a></li>
+          <li><a href="https://www.linkedin.com/company/c%C3%A1mara-chilena-de-inteligencia-artificial/posts/?feedView=all" target="_blank" rel="noopener noreferrer">C&aacute;mara Chilena de IA</a></li>
         </ul>
       </div>
     </div>
@@ -1456,7 +1470,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 
 <!-- Mobile sticky CTA -->
 <div class="mobile-cta">
-  <a href="#contact" class="btn btn-mint" style="width:100%;justify-content:center">Ver Demo Gratuita &rarr;</a>
+  <a href="https://calendar.app.google/RGbMFkhDrxdj8udg7" target="_blank" rel="noopener noreferrer" class="btn btn-mint" style="width:100%;justify-content:center">Ver Demo Gratuita &rarr;</a>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1791,12 +1805,14 @@ if (contactForm) {
     e.preventDefault();
     const btn = this.querySelector('.form-submit');
     const email = document.getElementById('f-email');
+    const calendarUrl = 'https://calendar.app.google/RGbMFkhDrxdj8udg7';
     if (!email.value || !email.validity.valid) {
       email.focus();
       email.style.borderColor = '#ff4d6d';
       setTimeout(() => { email.style.borderColor = ''; }, 2000);
       return;
     }
+    window.open(calendarUrl, '_blank', 'noopener,noreferrer');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
     // Replace with your actual form endpoint (Formspree, Netlify Forms, etc.)
