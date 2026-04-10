@@ -8,9 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 
 <style>
 /* ════════════════════════════════════════
@@ -19,14 +16,11 @@
 :root {
   --navy:     #0A1628;
   --navy-mid: #0D2137;
-  --navy-light:#0F2845;
   --cyan:     #00D4FF;
   --mint:     #00FF94;
   --white:    #FFFFFF;
   --muted:    rgba(255,255,255,0.55);
   --subtle:   rgba(255,255,255,0.08);
-  --glow:     rgba(0,212,255,0.15);
-  --glow-mint:rgba(0,255,148,0.15);
   --border:   rgba(0,212,255,0.2);
   --ff-display: 'Space Grotesk', sans-serif;
   --ff-body:    'DM Sans', sans-serif;
@@ -266,7 +260,7 @@ section { position: relative; }
   margin-bottom: 28px;
 }
 .hero-h1 .line-1 { display: block; overflow: hidden; }
-.hero-h1 .line-1 span { display: block; }
+.hero-h1 .line-1 span { display: block; transform: translateY(110%); }
 .hero-h1 .line-2 { display: block; overflow: hidden; }
 .hero-h1 .line-2 span {
   display: block; transform: translateY(110%);
@@ -385,12 +379,7 @@ section { position: relative; }
 }
 .garbage-line span { color: var(--white); }
 
-/* Animated data visual */
-.data-visual {
-  position: relative; height: 400px;
-  display: flex; align-items: center; justify-content: center;
-}
-#data-canvas { border-radius: 16px; }
+/* [removed dead .data-visual / #data-canvas rules] */
 
 /* ════════════════════════════════════════
    SECTION 3 — SOLUTION
@@ -852,13 +841,37 @@ html, body {
   min-height: 100%;
 }
 
+/* ── FOCUS VISIBLE (keyboard nav) ── */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .timeline-step { opacity: 1 !important; transform: none !important; }
+  #hero-ey, #hl1, #hl2, #hero-sub, #hero-ctas, #hero-note, #hero-stats { opacity: 1 !important; transform: none !important; }
+  #cursor-dot, #cursor-ring { display: none !important; }
+}
+
+/* ── HIDE CURSOR ELEMENTS ON TOUCH DEVICES ── */
+@media (hover: none) {
+  #cursor-dot, #cursor-ring { display: none !important; }
+  body { cursor: auto; }
+}
+
 </style>
 </head>
 <body>
 
 <!-- ── CUSTOM CURSOR ── -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
+<div id="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
 
 <!-- ════════════════════════════════════════
      MOBILE MENU
@@ -900,11 +913,12 @@ html, body {
   </div>
 </nav>
 
+<main id="main-content">
 <!-- ════════════════════════════════════════
      SECTION 1 &mdash; HERO
 ════════════════════════════════════════ -->
 <section id="hero">
-  <canvas id="hero-canvas"></canvas>
+  <canvas id="hero-canvas" aria-hidden="true" role="presentation"></canvas>
   <div class="hero-overlay"></div>
   <div class="container hero-content">
     <div class="hero-grid">
@@ -1038,7 +1052,7 @@ html, body {
       <!-- Card 1: Simulate -->
       <div class="sol-card reveal">
         <span class="sol-card-num">01 &mdash; SIMULAR</span>
-        <canvas class="sol-3d" id="sol-canvas-1"></canvas>
+        <canvas class="sol-3d" id="sol-canvas-1" aria-hidden="true"></canvas>
         <div class="sol-icon-wrap">🧪</div>
         <h3 class="sol-title">Generaci&oacute;n de Datos Sint&eacute;ticos</h3>
         <p class="sol-body">Generamos datasets de entrenamiento de alta calidad, incluso cuando los datos reales son escasos, regulados o simplemente no est&aacute;n disponibles. Privacy-safe por dise&ntilde;o.</p>
@@ -1051,7 +1065,7 @@ html, body {
       <!-- Card 2: Validate -->
       <div class="sol-card reveal">
         <span class="sol-card-num">02 &mdash; VALIDAR</span>
-        <canvas class="sol-3d" id="sol-canvas-2"></canvas>
+        <canvas class="sol-3d" id="sol-canvas-2" aria-hidden="true"></canvas>
         <div class="sol-icon-wrap">👥</div>
         <h3 class="sol-title">Red de Expertos Humanos</h3>
         <p class="sol-body">Especialistas de dominio en finanzas, salud, legal y tecnolog&iacute;a validan cada escenario. Conocimiento real. Feedback real. Incentivos alineados para sostener calidad a escala.</p>
@@ -1064,7 +1078,7 @@ html, body {
       <!-- Card 3: Train -->
       <div class="sol-card reveal">
         <span class="sol-card-num">03 &mdash; ENTRENAR</span>
-        <canvas class="sol-3d" id="sol-canvas-3"></canvas>
+        <canvas class="sol-3d" id="sol-canvas-3" aria-hidden="true"></canvas>
         <div class="sol-icon-wrap">⚡</div>
         <h3 class="sol-title">Modelos IA Listos para Producci&oacute;n</h3>
         <p class="sol-body">Modelos empresariales entrenados sobre datos confiables que realmente funcionan en el mundo real &mdash; no solo en demos. Auditables, explicables y medibles.</p>
@@ -1309,7 +1323,7 @@ html, body {
      SECTION 8 &mdash; CTA / CONTACT
 ════════════════════════════════════════ -->
 <section id="contact">
-  <canvas id="contact-canvas"></canvas>
+  <canvas id="contact-canvas" aria-hidden="true" role="presentation"></canvas>
   <div class="container contact-inner">
     <span class="eyebrow reveal" style="display:block;text-align:center;margin-bottom:16px">Empecemos</span>
     <h2 class="contact-h2 reveal">
@@ -1317,23 +1331,23 @@ html, body {
     </h2>
     <p class="contact-sub reveal">Cu&eacute;ntanos sobre tu proyecto. Te decimos exactamente c&oacute;mo DataMate puede acelerarlo.</p>
 
-    <div class="contact-form reveal">
+    <form id="contact-form" class="contact-form reveal" novalidate>
       <div class="form-grid">
         <div class="form-field">
-          <label>Nombre</label>
-          <input type="text" placeholder="Tu nombre"/>
+          <label for="f-nombre">Nombre</label>
+          <input id="f-nombre" type="text" placeholder="Tu nombre" autocomplete="given-name"/>
         </div>
         <div class="form-field">
-          <label>Empresa</label>
-          <input type="text" placeholder="Nombre de tu empresa"/>
+          <label for="f-empresa">Empresa</label>
+          <input id="f-empresa" type="text" placeholder="Nombre de tu empresa" autocomplete="organization"/>
         </div>
         <div class="form-field">
-          <label>Email corporativo</label>
-          <input type="email" placeholder="tu@empresa.com"/>
+          <label for="f-email">Email corporativo</label>
+          <input id="f-email" type="email" placeholder="tu@empresa.com" autocomplete="email" required/>
         </div>
         <div class="form-field">
-          <label>Pa&iacute;s</label>
-          <select>
+          <label for="f-pais">Pa&iacute;s</label>
+          <select id="f-pais">
             <option value="">Selecciona tu pa&iacute;s</option>
             <option>Colombia</option>
             <option>M&eacute;xico</option>
@@ -1346,13 +1360,13 @@ html, body {
         </div>
       </div>
       <div class="form-field">
-        <label>&iquest;Qu&eacute; est&aacute;s construyendo?</label>
-        <textarea placeholder="Cu&eacute;ntanos sobre tu desaf&iacute;o de datos o IA actual..."></textarea>
+        <label for="f-proyecto">&iquest;Qu&eacute; est&aacute;s construyendo?</label>
+        <textarea id="f-proyecto" placeholder="Cu&eacute;ntanos sobre tu desaf&iacute;o de datos o IA actual..."></textarea>
       </div>
-      <button class="btn btn-mint form-submit">
+      <button type="submit" class="btn btn-mint form-submit">
         Iniciar la Conversaci&oacute;n <span class="arrow-icon">&rarr;</span>
       </button>
-    </div>
+    </form>
 
     <div class="contact-trust reveal">
       <span class="trust-item">🔒 Sin spam</span>
@@ -1365,6 +1379,8 @@ html, body {
     </p>
   </div>
 </section>
+
+</main><!-- /main-content -->
 
 <!-- ════════════════════════════════════════
      FOOTER
@@ -1430,21 +1446,28 @@ html, body {
 </div>
 
 <!-- ════════════════════════════════════════
-     SCRIPTS
+     SCRIPTS (CDN first, then inline)
 ════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 <script>
-/* ── CURSOR ── */
+/* ── CURSOR (pointer devices only) ── */
 const dot = document.getElementById('cursor-dot');
 const ring = document.getElementById('cursor-ring');
-let cx = 0, cy = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
-(function cursorLoop() {
-  rx += (cx - rx) * 0.14;
-  ry += (cy - ry) * 0.14;
-  dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(cursorLoop);
-})();
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let cx = 0, cy = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+  (function cursorLoop() {
+    rx += (cx - rx) * 0.14;
+    ry += (cy - ry) * 0.14;
+    dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(cursorLoop);
+  })();
+} else {
+  dot.remove(); ring.remove();
+}
 
 /* ── NAV SCROLL ── */
 const nav = document.getElementById('nav');
@@ -1488,37 +1511,42 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
       (Math.random() - 0.5) * spread * 0.7,
       (Math.random() - 0.5) * spread
     );
-    mesh.userData = {
-      vx: (Math.random() - 0.5) * 0.012,
-      vy: (Math.random() - 0.5) * 0.012,
-      vz: (Math.random() - 0.5) * 0.012,
-      px: mesh.position.x, py: mesh.position.y, pz: mesh.position.z
-    };
+    mesh.userData = { px: mesh.position.x, py: mesh.position.y, pz: mesh.position.z };
     scene.add(mesh);
     nodes.push(mesh);
   }
 
-  /* Connections */
-  const lineMat = new THREE.LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.08 });
-  const lineGroup = new THREE.Group();
-  scene.add(lineGroup);
+  /* Connections — single LineSegments buffer, no per-frame allocations */
+  const CONNECT_DIST = 6;
+  const MAX_LINES = 600;
+  const linePositions = new Float32Array(MAX_LINES * 6);
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
+  lineGeo.setDrawRange(0, 0);
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.12 });
+  const lineSegs = new THREE.LineSegments(lineGeo, lineMat);
+  scene.add(lineSegs);
 
-  function rebuildLines() {
-    while (lineGroup.children.length) lineGroup.remove(lineGroup.children[0]);
-    const CONNECT_DIST = 6;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const d = nodes[i].position.distanceTo(nodes[j].position);
+  function updateLines() {
+    let count = 0;
+    for (let i = 0; i < nodes.length && count < MAX_LINES; i++) {
+      for (let j = i + 1; j < nodes.length && count < MAX_LINES; j++) {
+        const dx = nodes[i].position.x - nodes[j].position.x;
+        const dy = nodes[i].position.y - nodes[j].position.y;
+        const dz = nodes[i].position.z - nodes[j].position.z;
+        const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
         if (d < CONNECT_DIST) {
-          const geo = new THREE.BufferGeometry().setFromPoints([nodes[i].position, nodes[j].position]);
-          const m = lineMat.clone();
-          m.opacity = (1 - d / CONNECT_DIST) * 0.15;
-          lineGroup.add(new THREE.Line(geo, m));
+          const idx = count * 6;
+          linePositions[idx]   = nodes[i].position.x; linePositions[idx+1] = nodes[i].position.y; linePositions[idx+2] = nodes[i].position.z;
+          linePositions[idx+3] = nodes[j].position.x; linePositions[idx+4] = nodes[j].position.y; linePositions[idx+5] = nodes[j].position.z;
+          count++;
         }
       }
     }
+    lineGeo.attributes.position.needsUpdate = true;
+    lineGeo.setDrawRange(0, count * 2);
   }
-  rebuildLines();
+  updateLines();
 
   /* Mouse parallax */
   let mx = 0, my = 0;
@@ -1527,9 +1555,12 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
     my = -(e.clientY / window.innerHeight - 0.5) * 0.4;
   });
 
-  let t = 0, frame = 0;
+  let t = 0, frame = 0, heroVisible = true;
+  const heroObserver = new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }, { threshold: 0 });
+  heroObserver.observe(document.getElementById('hero'));
   (function animate() {
     requestAnimationFrame(animate);
+    if (!heroVisible) return; // pause when hero scrolled away
     t += 0.004;
     frame++;
     nodes.forEach((n, i) => {
@@ -1537,7 +1568,7 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
       n.position.y = n.userData.py + Math.cos(t + i * 0.3) * 0.4;
       n.position.z = n.userData.pz + Math.sin(t + i * 0.5) * 0.4;
     });
-    if (frame % 6 === 0) rebuildLines();
+    if (frame % 8 === 0) updateLines(); // update buffer, no allocations
     scene.rotation.y = mx * 0.3;
     scene.rotation.x = my * 0.3;
     renderer.render(scene, camera);
@@ -1550,10 +1581,11 @@ function buildSolScene(canvasId, color, type) {
   if (!canvas) return;
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 50);
+  const camera = new THREE.PerspectiveCamera(50, (canvas.getBoundingClientRect().width || 280) / 140, 0.1, 50);
   camera.position.z = 3;
-  renderer.setSize(canvas.clientWidth || 280, 140);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  const cw = canvas.getBoundingClientRect().width || 280;
+  renderer.setSize(cw, 140);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   let mesh;
   if (type === 'cube') {
@@ -1571,9 +1603,6 @@ function buildSolScene(canvasId, color, type) {
   }
   scene.add(mesh);
 
-  const al = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(al);
-
   let hovered = false;
   canvas.closest('.sol-card').addEventListener('mouseenter', () => hovered = true);
   canvas.closest('.sol-card').addEventListener('mouseleave', () => hovered = false);
@@ -1586,9 +1615,11 @@ function buildSolScene(canvasId, color, type) {
     renderer.render(scene, camera);
   })();
 }
-buildSolScene('sol-canvas-1', 0x00D4FF, 'cube');
-buildSolScene('sol-canvas-2', 0x00FF94, 'sphere');
-buildSolScene('sol-canvas-3', 0x00D4FF, 'torus');
+if (window.innerWidth > 768) {
+  buildSolScene('sol-canvas-1', 0x00D4FF, 'cube');
+  buildSolScene('sol-canvas-2', 0x00FF94, 'sphere');
+  buildSolScene('sol-canvas-3', 0x00D4FF, 'torus');
+}
 
 /* ── CONTACT PARTICLE CANVAS ── */
 (function() {
@@ -1686,14 +1717,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 ScrollTrigger.create({
   trigger: '#problem', start: 'top 65%',
   onEnter: () => {
-    gsap.to('#counter80', {
-      innerHTML: 80, duration: 2.5, ease: 'power2.out', snap: { innerHTML: 1 },
-      onUpdate: function() { document.getElementById('counter80').innerHTML = Math.round(this.targets()[0]._gsap.x || parseFloat(this.targets()[0].innerHTML)); }
-    });
-    // Simple counter
     let n = 0;
     const el = document.getElementById('counter80');
-    const iv = setInterval(() => { n = Math.min(n + 2, 80); el.textContent = n; if(n >= 80) clearInterval(iv); }, 35);
+    const iv = setInterval(() => { n = Math.min(n + 2, 80); el.textContent = n; if (n >= 80) clearInterval(iv); }, 35);
   }
 });
 
@@ -1721,9 +1747,7 @@ ScrollTrigger.create({
       setTimeout(() => {
         const el = document.getElementById(id);
         gsap.to(el, { opacity:1, x:0, duration:.6, ease:'power3.out' });
-        el.querySelector('.step-dot').style.borderColor = 'var(--cyan)';
-        el.querySelector('.step-dot').style.background = 'rgba(0,212,255,0.15)';
-        el.querySelector('.step-dot').style.boxShadow = '0 0 20px rgba(0,212,255,0.3)';
+        el.classList.add('active'); // uses .timeline-step.active CSS
       }, i * 220);
     });
   }
@@ -1734,7 +1758,7 @@ ScrollTrigger.create({
   trigger: '#insight', start: 'top 70%',
   onEnter: () => {
     document.getElementById('insight-uw').classList.add('animated');
-    gsap.from('#insight-h', { opacity:0, y:50, duration:1, ease:'power3.out' });
+    // note: #insight-h reveal handled by IntersectionObserver via .reveal class
   }
 });
 
@@ -1746,6 +1770,30 @@ if (window.innerWidth > 768) {
     scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
   });
 }
+/* ── CONTACT FORM ── */
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.form-submit');
+    const email = document.getElementById('f-email');
+    if (!email.value || !email.validity.valid) {
+      email.focus();
+      email.style.borderColor = '#ff4d6d';
+      setTimeout(() => { email.style.borderColor = ''; }, 2000);
+      return;
+    }
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+    // Replace with your actual form endpoint (Formspree, Netlify Forms, etc.)
+    // fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: new FormData(contactForm) })
+    setTimeout(() => {
+      btn.textContent = '✓ Mensaje enviado — te contactamos pronto';
+      btn.style.background = 'var(--mint)';
+    }, 1200);
+  });
+}
+
 </script>
 </body>
 </html>
