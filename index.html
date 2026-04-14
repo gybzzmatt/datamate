@@ -244,11 +244,19 @@ section { position: relative; }
   background: var(--carbon);
 }
 #hero-canvas {
-  position: absolute; inset: 0; z-index: 0;
+  position: absolute;
+  right: -8%;
+  top: -8%;
+  width: 78%;
+  height: 120%;
+  z-index: 0;
+  opacity: 0.7;
+  pointer-events: none;
 }
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(ellipse at 60% 50%, rgba(68,191,252,0.11) 0%, transparent 70%),
+  background: linear-gradient(90deg, rgba(11,11,11,0.74) 0%, rgba(11,11,11,0.44) 38%, rgba(11,11,11,0.14) 60%, transparent 100%),
+              radial-gradient(ellipse at 74% 48%, rgba(68,191,252,0.14) 0%, transparent 68%),
               radial-gradient(ellipse at 30% 70%, rgba(92,65,255,0.1) 0%, transparent 72%),
               linear-gradient(to bottom, transparent 56%, rgba(11,11,11,0.86) 100%);
 }
@@ -869,6 +877,7 @@ section { position: relative; }
    RESPONSIVE
 ════════════════════════════════════════ */
 @media (max-width: 1024px) {
+  #hero-canvas { right: -16%; width: 84%; opacity: 0.62; }
   .hero-grid { grid-template-columns: 1fr; }
   .hero-stats { flex-direction: row; }
   .stat-card { flex: 1; min-width: 160px; }
@@ -880,6 +889,7 @@ section { position: relative; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
+  #hero-canvas { right: -34%; top: -6%; width: 98%; height: 112%; opacity: 0.42; }
   .nav-links, .nav-partner { display: none; }
   .nav-hamburger { display: flex; }
   .mobile-cta { display: block; }
@@ -1025,7 +1035,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </div>
     </div>
 
-    <!-- Trust Carousel -->
+<!-- Trust Carousel -->
     <div class="logo-strip" aria-label="Empresas que conf&iacute;an en DataMate">
       <p class="strip-label">Empresas que conf&iacute;an en DataMate</p>
       <div class="carousel-viewport">
@@ -1591,20 +1601,39 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(65, 1, 0.1, 200);
-  camera.position.set(0, 0, 28);
- 
+  camera.position.set(-2.4, 0, 24);
+
+  function setHeroComposition() {
+    if (window.innerWidth <= 768) {
+      scene.position.x = 3.8;
+      camera.position.x = -3.1;
+      camera.position.z = 27;
+      return;
+    }
+    if (window.innerWidth <= 1024) {
+      scene.position.x = 3.1;
+      camera.position.x = -2.7;
+      camera.position.z = 25;
+      return;
+    }
+    scene.position.x = 3.6;
+    camera.position.x = -2.4;
+    camera.position.z = 24;
+  }
+
   function resize() {
     const W = canvas.offsetWidth  || 800;
     const H = canvas.offsetHeight || 600;
     renderer.setSize(W, H, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    setHeroComposition();
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
   }
   resize(); window.addEventListener('resize', resize);
  
   /* Nodes */
-  const NODE_COUNT = window.innerWidth < 768 ? 60 : 140;
+  const NODE_COUNT = window.innerWidth < 768 ? 56 : 170;
   const nodes = [];
   const nodeGeo = new THREE.SphereGeometry(0.12, 8, 8);
   for (let i = 0; i < NODE_COUNT; i++) {
@@ -1626,12 +1655,12 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
  
   /* Connections — single LineSegments buffer, no per-frame allocations */
   const CONNECT_DIST = 6;
-  const MAX_LINES = 600;
+  const MAX_LINES = 760;
   const linePositions = new Float32Array(MAX_LINES * 6);
   const lineGeo = new THREE.BufferGeometry();
   lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
   lineGeo.setDrawRange(0, 0);
-  const lineMat = new THREE.LineBasicMaterial({ color: 0x44BFFC, transparent: true, opacity: 0.12 });
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x44BFFC, transparent: true, opacity: 0.16 });
   const lineSegs = new THREE.LineSegments(lineGeo, lineMat);
   scene.add(lineSegs);
  
