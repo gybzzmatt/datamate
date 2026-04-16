@@ -1610,9 +1610,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 <!-- ════════════════════════════════════════
      SCRIPTS (CDN first, then inline)
 ════════════════════════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 <script>
 /* ── CURSOR (pointer devices only) ── */
 const dot = document.getElementById('cursor-dot');
@@ -1633,7 +1633,15 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 
 /* ── NAV SCROLL ── */
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+let navScrollTick = false;
+window.addEventListener('scroll', () => {
+  if (navScrollTick) return;
+  navScrollTick = true;
+  requestAnimationFrame(() => {
+    nav.classList.toggle('scrolled', scrollY > 60);
+    navScrollTick = false;
+  });
+}, { passive: true });
 
 /* ── MOBILE MENU ── */
 document.getElementById('nav-hamburger').onclick = () => document.getElementById('mobile-menu').classList.add('open');
@@ -1677,7 +1685,8 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
   resize(); window.addEventListener('resize', resize);
 
   /* Nodes */
-  const NODE_COUNT = window.innerWidth < 768 ? 56 : 170;
+  const viewportWidth = window.innerWidth;
+  const NODE_COUNT = viewportWidth > 1200 ? 96 : viewportWidth > 768 ? 64 : 36;
   const nodes = [];
   const nodeGeo = new THREE.SphereGeometry(0.12, 8, 8);
   for (let i = 0; i < NODE_COUNT; i++) {
@@ -1698,8 +1707,8 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
   }
 
   /* Connections — single LineSegments buffer, no per-frame allocations */
-  const CONNECT_DIST = 6;
-  const MAX_LINES = 760;
+  const CONNECT_DIST = viewportWidth > 768 ? 5.8 : 5.2;
+  const MAX_LINES = viewportWidth > 1200 ? 360 : viewportWidth > 768 ? 220 : 120;
   const linePositions = new Float32Array(MAX_LINES * 6);
   const lineGeo = new THREE.BufferGeometry();
   lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
@@ -1965,15 +1974,15 @@ if (contactForm) {
       setTimeout(() => { email.style.borderColor = ''; }, 2000);
       return;
     }
-    window.open(calendarUrl, '_blank', 'noopener,noreferrer');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
-    // Replace with your actual form endpoint (Formspree, Netlify Forms, etc.)
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: new FormData(contactForm) })
     setTimeout(() => {
-      btn.textContent = 'Mensaje enviado — te contactamos pronto';
+      btn.textContent = 'Gracias, te redirigimos para agendar tu llamada';
       btn.style.background = 'var(--mint)';
-    }, 1200);
+    }, 900);
+    setTimeout(() => {
+      window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+    }, 1400);
   });
 }
 
