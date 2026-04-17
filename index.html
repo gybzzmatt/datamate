@@ -167,7 +167,12 @@ section { position: relative; }
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 14px;
+  background: rgba(11,11,11,0.46);
+  border: 1px solid rgba(129,251,165,0.24);
+  backdrop-filter: blur(10px);
 }
 .logo-mark {
   width: 34px; height: 34px;
@@ -175,6 +180,8 @@ section { position: relative; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
+.logo-mark svg { width: 24px; height: 24px; display: block; }
+.enso-path { stroke-dasharray: 280; stroke-dashoffset: 0; }
 .logo-text {
   font-family: var(--ff-display); font-size: 16px; font-weight: 700;
   color: #fff; letter-spacing: 0.18em; text-transform: uppercase;
@@ -397,8 +404,91 @@ section { position: relative; }
   width: 44px; height: 44px; flex-shrink: 0;
   background: rgba(68,191,252,0.08); border: 1px solid var(--border);
   border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
+  overflow: hidden;
+  position: relative;
 }
+.pain-icon::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(68,191,252,0.08), rgba(92,65,255,0.03));
+  pointer-events: none;
+}
+.pain-svg { width: 30px; height: 30px; position: relative; z-index: 1; }
+.pain-icon-fragmented .node {
+  fill: #6ed3ff;
+  filter: drop-shadow(0 0 4px rgba(68,191,252,0.36));
+  animation: nodeFloat 3.6s ease-in-out infinite;
+}
+.pain-icon-fragmented .node.n2 { animation-delay: .3s; }
+.pain-icon-fragmented .node.n3 { animation-delay: .7s; }
+.pain-icon-fragmented .node.n4 { animation-delay: .5s; }
+.pain-icon-fragmented .frag-line {
+  stroke: rgba(68,191,252,0.72);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1.8 3.1;
+  animation: fragDrift 2.8s linear infinite;
+}
+.pain-icon-fragmented .frag-line.cut { stroke: rgba(68,191,252,0.38); stroke-dasharray: 1 4; }
+
+.pain-icon-locked .vault {
+  fill: rgba(92,65,255,0.12);
+  stroke: rgba(129,251,165,0.46);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 6px rgba(129,251,165,0.2));
+  animation: vaultPulse 3.4s ease-in-out infinite;
+}
+.pain-icon-locked .lock {
+  fill: rgba(129,251,165,0.86);
+  animation: lockBlink 2.6s ease-in-out infinite;
+}
+.pain-icon-locked .frame {
+  fill: none;
+  stroke: rgba(68,191,252,0.54);
+  stroke-width: 1.2;
+  stroke-dasharray: 2 2;
+  animation: frameRotate 4.8s linear infinite;
+  transform-origin: 15px 15px;
+}
+
+.pain-icon-mismatch .target {
+  fill: none;
+  stroke: rgba(68,191,252,0.55);
+  stroke-width: 1.4;
+}
+.pain-icon-mismatch .fit-cube {
+  fill: rgba(92,65,255,0.22);
+  stroke: rgba(68,191,252,0.8);
+  stroke-width: 1.1;
+  animation: misfitWobble 3.2s ease-in-out infinite;
+}
+.pain-icon-mismatch .path {
+  fill: none;
+  stroke: rgba(129,251,165,0.72);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 2 2;
+  animation: pathShift 2.8s linear infinite;
+}
+.pain-icon-mismatch .xmark {
+  stroke: rgba(255,132,150,0.85);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  animation: xPulse 2.2s ease-in-out infinite;
+}
+@keyframes nodeFloat { 0%,100%{transform:translateY(0)}50%{transform:translateY(-1.4px)} }
+@keyframes fragDrift { to { stroke-dashoffset: -10; } }
+@keyframes vaultPulse { 0%,100%{opacity:.78}50%{opacity:1} }
+@keyframes lockBlink { 0%,100%{opacity:.8}45%{opacity:1} }
+@keyframes frameRotate { to { transform: rotate(360deg); } }
+@keyframes misfitWobble { 0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-1px,1px) rotate(-7deg)} }
+@keyframes pathShift { to { stroke-dashoffset: 8; } }
+@keyframes xPulse { 0%,100%{opacity:.5}50%{opacity:.95} }
+.pain-card:hover .pain-icon-fragmented .frag-line { stroke: rgba(68,191,252,0.9); }
+.pain-card:hover .pain-icon-locked .vault { stroke: rgba(129,251,165,0.6); }
+.pain-card:hover .pain-icon-mismatch .fit-cube { stroke: rgba(129,251,165,0.84); }
+.pain-card:hover .pain-icon-mismatch .xmark { opacity: .9; }
 .pain-title { font-family: var(--ff-display); font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .pain-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
  
@@ -1747,9 +1837,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 <!-- ════════════════════════════════════════
      SCRIPTS (CDN first, then inline)
 ════════════════════════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 <script>
 /* cursor removed — native OS cursor restored */
  
@@ -2170,12 +2260,13 @@ if (contactForm) {
     window.open(calendarUrl, '_blank', 'noopener,noreferrer');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
-    // Replace with your actual form endpoint (Formspree, Netlify Forms, etc.)
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: new FormData(contactForm) })
     setTimeout(() => {
       btn.textContent = 'Mensaje enviado — te contactamos pronto';
       btn.style.background = 'var(--mint)';
-    }, 1200);
+    }, 900);
+    setTimeout(() => {
+      window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+    }, 1400);
   });
 }
  
