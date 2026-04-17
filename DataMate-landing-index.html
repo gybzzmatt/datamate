@@ -50,36 +50,11 @@ body {
   color: var(--white);
   font-family: var(--ff-body);
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
 }
 ::selection { background: rgba(68,191,252,0.3); color: #fff; }
-
-/* ── CUSTOM CURSOR ── */
-#cursor-dot {
-  position: fixed; top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--cyan);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: transform 0.1s ease, background 0.2s;
-}
-#cursor-ring {
-  position: fixed; top: 0; left: 0;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(68,191,252,0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%,-50%);
-  transition: transform 0.18s ease, width 0.25s, height 0.25s, border-color 0.25s;
-}
-body:has(a:hover) #cursor-ring,
-body:has(button:hover) #cursor-ring {
-  width: 52px; height: 52px;
-  border-color: var(--cyan);
-}
+ 
+/* cursor removed */
  
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 4px; }
@@ -195,14 +170,14 @@ section { position: relative; }
   display: flex; align-items: center; gap: 10px; text-decoration: none;
 }
 .logo-mark {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--cyan), var(--mint));
-  border-radius: 8px;
+  width: 34px; height: 34px;
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--ff-mono); font-size: 14px; font-weight: 500; color: #000;
+  flex-shrink: 0;
 }
 .logo-text {
-  font-family: var(--ff-display); font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.05em;
+  font-family: var(--ff-display); font-size: 16px; font-weight: 700;
+  color: #fff; letter-spacing: 0.18em; text-transform: uppercase;
 }
 .nav-links {
   display: flex; align-items: center; gap: 32px; list-style: none;
@@ -324,7 +299,7 @@ section { position: relative; }
 }
 .stat-label { font-size: 13px; color: var(--muted); line-height: 1.4; }
 .stat-card.mint-stat .stat-number { color: var(--mint); text-shadow: 0 0 30px rgba(129,251,165,0.4); }
-
+ 
 /* ── TRUST CAROUSEL ── */
 .logo-strip {
   padding: 24px 0 28px;
@@ -517,7 +492,7 @@ section { position: relative; }
   padding: 4px 10px; border-radius: 100px;
 }
 .tag.mint-tag { color: var(--mint); background: rgba(129,251,165,0.06); border-color: rgba(129,251,165,0.2); }
-
+ 
 /* Three.js mini-scenes inside cards */
 .sol-3d { height: 140px; margin-bottom: 24px; border-radius: 10px; overflow: hidden; }
  
@@ -585,6 +560,52 @@ section { position: relative; }
 /* ════════════════════════════════════════
    SECTION 5 — TRACTION / SOCIAL PROOF
 ════════════════════════════════════════ */
+ 
+/* ── TRACTION / DATAROBOT REDESIGN ── */
+.dr-what-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 56px;
+}
+.dr-col {
+  background: rgba(13,33,55,0.6); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 24px;
+}
+.dr-col-title {
+  font-family: var(--ff-display); font-size: 15px; font-weight: 700;
+  line-height: 1.35; margin-bottom: 20px; color: var(--white);
+}
+.dr-stat-row {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px;
+  padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dr-stat-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.dr-stat-num {
+  font-family: var(--ff-display); font-size: 28px; font-weight: 700;
+  color: var(--cyan); line-height: 1; white-space: nowrap;
+}
+.dr-stat-num.mint { color: var(--mint); }
+.dr-stat-label { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.dr-desc-box {
+  background: rgba(0,212,255,0.04); border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 12px; padding: 18px 26px;
+  font-size: 14px; color: rgba(255,255,255,0.68); line-height: 1.7;
+  margin-bottom: 40px;
+}
+/* Logo grid */
+.int-logo-grid { display: flex; flex-direction: column; gap: 10px; }
+.int-logo-row  { display: flex; gap: 10px; }
+.int-logo-cell {
+  flex: 1; height: 44px; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px; transition: border-color .3s, background .3s;
+  padding: 0 10px; overflow: hidden;
+}
+.int-logo-cell:hover {
+  border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07);
+}
+.int-logo-cell svg { max-width: 100%; max-height: 26px; }
+@media (max-width:1024px) { .dr-what-grid { grid-template-columns: 1fr; } }
+@media (max-width:768px)  { .dr-what-grid { grid-template-columns: 1fr; } }
+ 
 #proof {
   padding: 120px 0;
   background: var(--carbon);
@@ -865,7 +886,7 @@ section { position: relative; }
   0%, 82%, 100% { transform: scale(1); text-shadow: none; }
   88% { transform: scale(1.03); text-shadow: 0 0 10px rgba(68,191,252,0.22); }
 }
-
+ 
 /* Mobile sticky CTA */
 .mobile-cta {
   display: none; position: fixed; bottom: 0; left: 0; right: 0;
@@ -936,13 +957,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   .reveal { opacity: 1 !important; transform: none !important; }
   .timeline-step { opacity: 1 !important; transform: none !important; }
   #hero-ey, #hl1, #hl2, #hero-sub, #hero-ctas, #hero-note, #hero-stats { opacity: 1 !important; transform: none !important; }
-  #cursor-dot, #cursor-ring { display: none !important; }
 }
  
 /* ── HIDE CURSOR ELEMENTS ON TOUCH DEVICES ── */
 @media (hover: none) {
-  #cursor-dot, #cursor-ring { display: none !important; }
-  body { cursor: auto; }
 }
  
 </style>
@@ -950,8 +968,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 <body>
  
 <!-- ── CUSTOM CURSOR ── -->
-<div id="cursor-dot" aria-hidden="true"></div>
-<div id="cursor-ring" aria-hidden="true"></div>
  
 <!-- ════════════════════════════════════════
      MOBILE MENU
@@ -972,7 +988,25 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   <div class="container">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <div class="logo-mark">DM</div>
+        <div class="logo-mark"><svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Outer enso stroke — open circle with tapered ends simulating brush -->
+  <path d="M17 3
+    C26.4 3 31 9.5 31 17
+    C31 24.5 25.8 31 17 31
+    C8.8 31 3 24.8 3 17
+    C3 9.5 8 4 14 3.2"
+    stroke="url(#ensoGrad)" stroke-width="3.5"
+    stroke-linecap="round" fill="none"/>
+  <!-- Inner accent dot -->
+  <circle cx="17" cy="17" r="2" fill="#00FF94" opacity="0.5"/>
+  <defs>
+    <linearGradient id="ensoGrad" x1="3" y1="17" x2="31" y2="17" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00FF94"/>
+      <stop offset="0.6" stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#00FF94" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+</svg></div>
         <span class="logo-text">DataMate</span>
       </a>
       <ul class="nav-links">
@@ -1034,7 +1068,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         </div>
       </div>
     </div>
-
+ 
 <!-- Trust Carousel -->
     <div class="logo-strip" aria-label="Empresas que conf&iacute;an en DataMate">
       <p class="strip-label">Empresas que conf&iacute;an en DataMate</p>
@@ -1109,23 +1143,26 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </div>
       <!-- Right: pain cards + visual -->
       <div>
+        <!-- Data pain animation -->
+        <canvas id="pain-canvas" aria-hidden="true"
+          style="width:100%;height:180px;border-radius:12px;margin-bottom:20px;
+                 display:block;border:1px solid rgba(0,212,255,0.1);
+                 background:rgba(10,22,40,0.55)"></canvas>
+ 
         <div class="pain-cards">
           <div class="pain-card reveal">
-            <div class="pain-icon"></div>
             <div>
               <p class="pain-title">Datos fragmentados</p>
               <p class="pain-body">Distribuidos en m&uacute;ltiples nubes, silos y sistemas. Pipelines rotos, duplicidad y sin trazabilidad: el modelo aprende inconsistencias.</p>
             </div>
           </div>
           <div class="pain-card reveal">
-            <div class="pain-icon"></div>
             <div>
               <p class="pain-title">Datos regulados que no puedes usar</p>
               <p class="pain-body">Privacidad, compliance y seguridad limitan el entrenamiento en entornos reales. HIPAA, GDPR, PCI DSS, normativas locales.</p>
             </div>
           </div>
           <div class="pain-card reveal">
-            <div class="pain-icon"></div>
             <div>
               <p class="pain-title">Modelos gen&eacute;ricos que fallan en tu caso</p>
               <p class="pain-body">Etiquetas imperfectas, sesgo y "ground truth" inconsistente. Los equipos pierden tiempo validando en lugar de construir.</p>
@@ -1162,7 +1199,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">01 &mdash; SIMULAR</span>
         <canvas class="sol-3d" id="sol-canvas-1" aria-hidden="true"></canvas>
-        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Generaci&oacute;n de Datos Sint&eacute;ticos</h3>
         <p class="sol-body">Generamos datasets de entrenamiento de alta calidad, incluso cuando los datos reales son escasos, regulados o simplemente no est&aacute;n disponibles. Privacy-safe por dise&ntilde;o.</p>
         <div class="sol-tags">
@@ -1175,7 +1211,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">02 &mdash; VALIDAR</span>
         <canvas class="sol-3d" id="sol-canvas-2" aria-hidden="true"></canvas>
-        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Red de Expertos Humanos</h3>
         <p class="sol-body">Especialistas de dominio en finanzas, salud, legal y tecnolog&iacute;a validan cada escenario. Conocimiento real. Feedback real. Incentivos alineados para sostener calidad a escala.</p>
         <div class="sol-tags">
@@ -1188,7 +1223,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">03 &mdash; ENTRENAR</span>
         <canvas class="sol-3d" id="sol-canvas-3" aria-hidden="true"></canvas>
-        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Modelos IA Listos para Producci&oacute;n</h3>
         <p class="sol-body">Modelos empresariales entrenados sobre datos confiables que realmente funcionan en el mundo real &mdash; no solo en demos. Auditables, explicables y medibles.</p>
         <div class="sol-tags">
@@ -1293,20 +1327,159 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   <div class="container">
     <div class="proof-header">
       <span class="eyebrow reveal">Tracci&oacute;n</span>
-      <h2 class="section-title reveal">Confiado por equipos que construyen<br><span class="cyan">la IA del futuro</span></h2>
+      <h2 class="section-title reveal">&iquest;Qu&eacute; es DataRobot?<br><span class="cyan">Una plataforma completa de IA end-to-end</span></h2>
     </div>
  
-    <!-- Partner block -->
+    <!-- Partner badge -->
     <div class="partner-block reveal">
       <div class="partner-logo-wrap">
         <div class="partner-dot"></div>
-        <span class="partner-name">DataRobot</span>
+        <svg viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:32px;width:auto">
+  <!-- DataRobot mark: 3x2 checkered grid -->
+  <rect x="0"  y="0"  width="13" height="13" rx="1" fill="white"/>
+  <rect x="15" y="0"  width="13" height="13" rx="1" fill="white" opacity="0.35"/>
+  <rect x="30" y="0"  width="13" height="13" rx="1" fill="white" opacity="0.35"/>
+  <rect x="0"  y="15" width="13" height="13" rx="1" fill="white" opacity="0.35"/>
+  <rect x="15" y="15" width="13" height="13" rx="1" fill="white"/>
+  <rect x="30" y="15" width="13" height="13" rx="1" fill="white"/>
+  <!-- wordmark -->
+  <text x="54" y="22" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="white" letter-spacing="-0.5">DataRobot</text>
+</svg>
         <span class="partner-badge">Partner Oficial LatAm</span>
       </div>
-      <p class="partner-desc">La plataforma con mejor track record en producci&oacute;n enterprise: 66% menos tiempo de delivery, 20x m&aacute;s casos de uso desplegados. Implementaci&oacute;n local, soporte en espa&ntilde;ol.</p>
+      <p class="partner-desc">Implementaci&oacute;n local, soporte en espa&ntilde;ol. La plataforma de IA empresarial con mayor track record en producci&oacute;n enterprise.</p>
     </div>
  
-    <!-- Stat row -->
+    <!-- Description box -->
+    <div class="dr-desc-box reveal">
+      Predecir riesgo y mortalidad. Optimizar recursos y procesos. Detectar anomal&iacute;as y fraude. Automatizar reportes. Integrarse con tus sistemas actuales. DataRobot hace posible que la IA empresarial funcione en el mundo real &mdash; no solo en demos.
+    </div>
+ 
+    <!-- 3-col DataRobot feature grid -->
+    <div class="dr-what-grid">
+ 
+      <div class="dr-col reveal">
+        <p class="dr-col-title">Dise&ntilde;ada para equipos multifuncionales</p>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num">70<span style="font-size:16px">+</span></span>
+          <span class="dr-stat-label">Patentes en GenAI y PredAI</span>
+        </div>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num">700<span style="font-size:16px">+</span></span>
+          <span class="dr-stat-label">Ingenieros y cient&iacute;ficos de datos de clase mundial</span>
+        </div>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num mint">160<span style="font-size:16px">K+</span></span>
+          <span class="dr-stat-label">Casos de uso de IA implementados globalmente</span>
+        </div>
+      </div>
+ 
+      <div class="dr-col reveal">
+        <p class="dr-col-title">Maximiza el impacto, minimiza riesgos</p>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num">1/3</span>
+          <span class="dr-stat-label">Transacciones en USA (USD 7.5T) pasan por modelos DataRobot</span>
+        </div>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num mint">66<span style="font-size:16px">%</span></span>
+          <span class="dr-stat-label">Menos tiempo de delivery en proyectos enterprise</span>
+        </div>
+        <div class="dr-stat-row">
+          <span class="dr-stat-num">20<span style="font-size:16px">x</span></span>
+          <span class="dr-stat-label">M&aacute;s casos en producci&oacute;n vs. desarrollo manual</span>
+        </div>
+      </div>
+ 
+      <div class="dr-col reveal">
+        <p class="dr-col-title">Integraciones listas con las principales tecnolog&iacute;as</p>
+                <div class="int-logo-grid">
+          <div class="int-logo-row">
+            <div class="int-logo-cell"><svg viewBox="0 0 100 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="50" y="24" font-family="'Amazon Ember',Arial,sans-serif" font-size="20" font-weight="400" fill="white" text-anchor="middle" letter-spacing="1">aws</text>
+  <!-- smile arc -->
+  <path d="M20 34 Q50 46 80 34" stroke="#FF9900" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M74 30 L80 34 L75 38" stroke="#FF9900" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+            <div class="int-logo-cell"><svg viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Snowflake icon -->
+  <g transform="translate(2,3)">
+    <line x1="15" y1="0"  x2="15" y2="30" stroke="#29B6F6" stroke-width="3" stroke-linecap="round"/>
+    <line x1="0"  y1="15" x2="30" y2="15" stroke="#29B6F6" stroke-width="3" stroke-linecap="round"/>
+    <line x1="4"  y1="4"  x2="26" y2="26" stroke="#29B6F6" stroke-width="3" stroke-linecap="round"/>
+    <line x1="26" y1="4"  x2="4"  y2="26" stroke="#29B6F6" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="15" cy="0"  r="3" fill="#29B6F6"/>
+    <circle cx="15" cy="30" r="3" fill="#29B6F6"/>
+    <circle cx="0"  cy="15" r="3" fill="#29B6F6"/>
+    <circle cx="30" cy="15" r="3" fill="#29B6F6"/>
+    <circle cx="4"  cy="4"  r="3" fill="#29B6F6"/>
+    <circle cx="26" cy="26" r="3" fill="#29B6F6"/>
+    <circle cx="26" cy="4"  r="3" fill="#29B6F6"/>
+    <circle cx="4"  cy="26" r="3" fill="#29B6F6"/>
+    <circle cx="15" cy="15" r="4" fill="#29B6F6"/>
+  </g>
+  <text x="42" y="25" font-family="Arial,sans-serif" font-size="16" font-weight="400" fill="#29B6F6" letter-spacing="0.3">snowflake</text>
+</svg></div>
+          </div>
+          <div class="int-logo-row">
+            <div class="int-logo-cell"><svg viewBox="0 0 130 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="4" width="24" height="24" rx="4" fill="#76B900"/>
+  <path d="M4 20 C4 12 12 8 18 10 C14 10 9 14 9 20 Z" fill="white" opacity="0.9"/>
+  <path d="M18 10 C22 11 24 15 22 20 C21 16 18 13 14 14 C16 12 18 10 18 10Z" fill="white" opacity="0.7"/>
+  <circle cx="14" cy="17" r="3" fill="white"/>
+  <text x="30" y="23" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="rgba(255,255,255,0.85)" letter-spacing="1.5">NVIDIA</text>
+</svg></div>
+            <div class="int-logo-cell"><svg viewBox="0 0 140 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M4 10 L16 4 L28 10 L16 16Z" fill="#FF3621"/>
+  <path d="M4 18 L16 12 L28 18 L16 24Z" fill="#FF3621" opacity="0.75"/>
+  <path d="M4 26 L16 20 L28 26 L16 32Z" fill="#FF3621" opacity="0.5"/>
+  <text x="35" y="24" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.85)">Databricks</text>
+</svg></div>
+          </div>
+          <div class="int-logo-row">
+            <div class="int-logo-cell"><svg viewBox="0 0 90 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 30 L12 6 L84 6 L78 30Z" fill="url(#sap1)"/>
+  <text x="22" y="25" font-family="Arial,sans-serif" font-size="18" font-weight="900" fill="white" letter-spacing="1">SAP</text>
+  <defs>
+    <linearGradient id="sap1" x1="6" y1="30" x2="84" y2="6" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0064A5"/>
+      <stop offset="1" stop-color="#1D9BD1"/>
+    </linearGradient>
+  </defs>
+</svg></div>
+            <div class="int-logo-cell"><svg viewBox="0 0 110 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M14 28 L22 6 L30 28 L14 28Z" fill="url(#az1)" opacity="0.9"/>
+  <path d="M22 6 L34 28 L14 28Z" fill="url(#az2)" opacity="0.7"/>
+  <path d="M22 14 L28 28 L18 22Z" fill="#0078D4" opacity="0.6"/>
+  <defs>
+    <linearGradient id="az1" x1="14" y1="6" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0078D4"/>
+      <stop offset="1" stop-color="#50B0FF"/>
+    </linearGradient>
+    <linearGradient id="az2" x1="22" y1="6" x2="34" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#50B0FF"/>
+      <stop offset="1" stop-color="#0070C0"/>
+    </linearGradient>
+  </defs>
+  <text x="40" y="25" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.85)">Azure</text>
+</svg></div>
+          </div>
+          <div class="int-logo-row">
+            <div class="int-logo-cell" style="flex:none;width:100%"><svg viewBox="0 0 130 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 24 C22 18 26 14 32 14 C33 10 37 7 42 8 C44 4 49 2 54 4 C59 2 64 6 64 12 C68 13 71 17 70 22 C69 26 65 28 61 28 L26 28 C23 28 22 26 22 24Z" fill="#4285F4"/>
+  <path d="M32 14 C33 10 37 7 42 8" stroke="#EA4335" stroke-width="3" fill="none"/>
+  <path d="M42 8 C44 4 49 2 54 4" stroke="#FBBC05" stroke-width="3" fill="none"/>
+  <path d="M54 4 C59 2 64 6 64 12" stroke="#34A853" stroke-width="3" fill="none"/>
+  <text x="22" y="38" font-family="Arial,sans-serif" font-size="11" fill="rgba(255,255,255,0.75)" letter-spacing="0.3">Google Cloud</text>
+</svg></div>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+ 
+    </div>
+ 
+    <!-- DataMate stat row -->
     <div class="stat-row">
       <div class="stat-row-card reveal">
         <div class="stat-row-number" id="sr1">0</div>
@@ -1314,7 +1487,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </div>
       <div class="stat-row-card reveal">
         <div class="stat-row-number" id="sr2">0</div>
-        <div class="stat-row-label">M&aacute;s casos en producci&oacute;n</div>
+        <div class="stat-row-label">Casos en producci&oacute;n</div>
       </div>
       <div class="stat-row-card reveal">
         <div class="stat-row-number" id="sr3">0</div>
@@ -1329,7 +1502,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
     <!-- Testimonials -->
     <div class="testimonials">
       <div class="testimonial-card reveal">
-        <div class="quote-mark">"</div>
+        <div class="quote-mark">&ldquo;</div>
         <p class="testimonial-quote">La velocidad y calidad que obtenemos en los casos de uso es asombrosa. Los modelos llegan a producci&oacute;n en una fracci&oacute;n del tiempo normal. DataMate es el partner que necesit&aacute;bamos.</p>
         <div class="testimonial-author">
           <div class="author-avatar">FM</div>
@@ -1340,7 +1513,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         </div>
       </div>
       <div class="testimonial-card reveal">
-        <div class="quote-mark">"</div>
+        <div class="quote-mark">&ldquo;</div>
         <p class="testimonial-quote">Por fin un partner que entiende los desaf&iacute;os reales de datos en LatAm &mdash; compliance, regulaci&oacute;n, fragmentaci&oacute;n. Resolvieron en 6 semanas lo que llev&aacute;bamos 8 meses intentando.</p>
         <div class="testimonial-author">
           <div class="author-avatar">CL</div>
@@ -1505,7 +1678,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
     <div class="footer-grid">
       <div>
         <div class="nav-logo" style="margin-bottom:0">
-          <div class="logo-mark">DM</div>
+          <div class="logo-mark"><svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M17 3 C26.4 3 31 9.5 31 17 C31 24.5 25.8 31 17 31 C8.8 31 3 24.8 3 17 C3 9.5 8 4 14 3.2"
+    stroke="url(#ensoGradF)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <circle cx="17" cy="17" r="2" fill="#00FF94" opacity="0.5"/>
+  <defs>
+    <linearGradient id="ensoGradF" x1="3" y1="17" x2="31" y2="17" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00FF94"/>
+      <stop offset="0.6" stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#00FF94" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+</svg></div>
           <span class="logo-text">DataMate</span>
         </div>
         <p class="footer-brand-desc">
@@ -1567,24 +1751,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 <script>
-/* ── CURSOR (pointer devices only, not inside iframe) ── */
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
-if (window.self === window.top && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  let cx = 0, cy = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
-  (function cursorLoop() {
-    rx += (cx - rx) * 0.14;
-    ry += (cy - ry) * 0.14;
-    dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(cursorLoop);
-  })();
-} else {
-  document.body.style.cursor = 'auto';
-  dot.style.display = 'none';
-  ring.style.display = 'none';
-}
+/* cursor removed — native OS cursor restored */
  
 /* ── NAV SCROLL ── */
 const nav = document.getElementById('nav');
@@ -1602,7 +1769,7 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(65, 1, 0.1, 200);
   camera.position.set(-2.4, 0, 24);
-
+ 
   function setHeroComposition() {
     if (window.innerWidth <= 768) {
       scene.position.x = 3.8;
@@ -1620,7 +1787,7 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
     camera.position.x = -2.4;
     camera.position.z = 24;
   }
-
+ 
   function resize() {
     const W = canvas.offsetWidth  || 800;
     const H = canvas.offsetHeight || 600;
@@ -1791,6 +1958,80 @@ if (window.innerWidth > 768) {
   })();
 })();
  
+ 
+/* ── DATA PAIN CANVAS ── */
+(function(){
+  const cv=document.getElementById('pain-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  function resize(){ cv.width=cv.offsetWidth||560; cv.height=cv.offsetHeight||180; }
+  resize(); window.addEventListener('resize',resize);
+ 
+  const PHASES=['Datos fragmentados','Datos regulados','Alucinación del modelo'];
+  const NCOLORS=['rgba(0,212,255,','rgba(255,70,70,','rgba(255,170,0,'];
+  const LCOLORS=['rgba(0,212,255,','rgba(255,70,70,','rgba(255,170,0,'];
+  const PD=3200; // ms per phase
+ 
+  const N=24;
+  let nodes=[];
+  for(let i=0;i<N;i++) nodes.push({
+    x:Math.random()*(cv.width||560),
+    y:Math.random()*(cv.height||180),
+    vx:(Math.random()-.5)*.6,
+    vy:(Math.random()-.5)*.6,
+    r:1.5+Math.random()*2
+  });
+ 
+  function frame(){
+    const W=cv.width, H=cv.height;
+    const now=Date.now();
+    const pi=Math.floor(now/PD)%3;
+    const pt=(now%PD)/PD;
+    ctx.clearRect(0,0,W,H);
+ 
+    nodes.forEach(n=>{
+      if(pi===0){ n.x+=n.vx*1.4; n.y+=n.vy*1.4; }
+      else if(pi===1){ n.x+=(W/2-n.x)*.005+n.vx*.2; n.y+=(H/2-n.y)*.005+n.vy*.2; }
+      else{ n.x+=n.vx+(Math.random()-.5)*2.2; n.y+=n.vy+(Math.random()-.5)*2.2; }
+      if(n.x<3||n.x>W-3) n.vx*=-1;
+      if(n.y<3||n.y>H-3) n.vy*=-1;
+      n.x=Math.max(3,Math.min(W-3,n.x));
+      n.y=Math.max(3,Math.min(H-3,n.y));
+    });
+ 
+    const DIST=pi===0?65:pi===1?85:48;
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          ctx.beginPath();
+          ctx.strokeStyle=LCOLORS[pi]+((1-d/DIST)*.35)+')';
+          ctx.lineWidth=pi===2?.5+Math.random():.8;
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          if(pi===2&&Math.random()<.12) ctx.lineTo(nodes[i].x+(Math.random()-.5)*18,nodes[i].y+(Math.random()-.5)*18);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach((n,i)=>{
+      let a=pi===2&&Math.random()<.07?.08:.72;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=NCOLORS[pi]+a+')'; ctx.fill();
+      if(pi===1&&i%4===0){
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r+4,0,Math.PI*2);
+        ctx.strokeStyle='rgba(255,70,70,.25)'; ctx.lineWidth=1; ctx.stroke();
+      }
+    });
+    ctx.font='9px monospace';
+    ctx.fillStyle=NCOLORS[pi]+'0.45)';
+    ctx.fillText('◆  '+PHASES[pi].toUpperCase(), 12, H-10);
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+ 
 /* ── GSAP ANIMATIONS ── */
 gsap.registerPlugin(ScrollTrigger);
 if (window.self !== window.top) {
@@ -1941,4 +2182,3 @@ if (contactForm) {
 </script>
 </body>
 </html>
- 
