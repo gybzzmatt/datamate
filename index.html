@@ -50,7 +50,35 @@ body {
   color: var(--white);
   font-family: var(--ff-body);
   overflow-x: hidden;
-  cursor: auto;
+  cursor: none;
+}
+::selection { background: rgba(68,191,252,0.3); color: #fff; }
+
+/* ── CUSTOM CURSOR ── */
+#cursor-dot {
+  position: fixed; top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s ease, background 0.2s;
+}
+#cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(68,191,252,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease, width 0.25s, height 0.25s, border-color 0.25s;
+}
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring {
+  width: 52px; height: 52px;
+  border-color: var(--cyan);
 }
 ::selection { background: rgba(68,191,252,0.3); color: #fff; }
 
@@ -167,17 +195,27 @@ section { position: relative; }
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 14px;
+  background: rgba(11,11,11,0.46);
+  border: 1px solid rgba(129,251,165,0.24);
+  backdrop-filter: blur(10px);
 }
 .logo-mark {
   width: 34px; height: 34px;
-  background: transparent;
+  color: #81FBA5;
+  border-radius: 10px;
+  background: rgba(129,251,165,0.06);
+  border: 1px solid rgba(129,251,165,0.34);
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
 }
+.logo-mark svg { width: 24px; height: 24px; display: block; }
+.enso-path { stroke-dasharray: 280; stroke-dashoffset: 0; }
 .logo-text {
-  font-family: var(--ff-display); font-size: 16px; font-weight: 700;
-  color: #fff; letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: var(--ff-display); font-size: 16px; font-weight: 700; color: #81FBA5; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(129,251,165,0.16);
 }
 .nav-links {
   display: flex; align-items: center; gap: 32px; list-style: none;
@@ -395,10 +433,93 @@ section { position: relative; }
 }
 .pain-icon {
   width: 44px; height: 44px; flex-shrink: 0;
-  background: rgba(68,191,252,0.08); border: 1px solid var(--border);
+  background: rgba(68,191,252,0.06); border: 1px solid var(--border);
   border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
+  overflow: hidden;
+  position: relative;
 }
+.pain-icon::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(68,191,252,0.08), rgba(92,65,255,0.03));
+  pointer-events: none;
+}
+.pain-svg { width: 30px; height: 30px; position: relative; z-index: 1; }
+.pain-icon-fragmented .node {
+  fill: #6ed3ff;
+  filter: drop-shadow(0 0 4px rgba(68,191,252,0.36));
+  animation: nodeFloat 3.6s ease-in-out infinite;
+}
+.pain-icon-fragmented .node.n2 { animation-delay: .3s; }
+.pain-icon-fragmented .node.n3 { animation-delay: .7s; }
+.pain-icon-fragmented .node.n4 { animation-delay: .5s; }
+.pain-icon-fragmented .frag-line {
+  stroke: rgba(68,191,252,0.72);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1.8 3.1;
+  animation: fragDrift 2.8s linear infinite;
+}
+.pain-icon-fragmented .frag-line.cut { stroke: rgba(68,191,252,0.38); stroke-dasharray: 1 4; }
+
+.pain-icon-locked .vault {
+  fill: rgba(92,65,255,0.12);
+  stroke: rgba(129,251,165,0.46);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 6px rgba(129,251,165,0.2));
+  animation: vaultPulse 3.4s ease-in-out infinite;
+}
+.pain-icon-locked .lock {
+  fill: rgba(129,251,165,0.86);
+  animation: lockBlink 2.6s ease-in-out infinite;
+}
+.pain-icon-locked .frame {
+  fill: none;
+  stroke: rgba(68,191,252,0.54);
+  stroke-width: 1.2;
+  stroke-dasharray: 2 2;
+  animation: frameRotate 4.8s linear infinite;
+  transform-origin: 15px 15px;
+}
+
+.pain-icon-mismatch .target {
+  fill: none;
+  stroke: rgba(68,191,252,0.55);
+  stroke-width: 1.4;
+}
+.pain-icon-mismatch .fit-cube {
+  fill: rgba(92,65,255,0.22);
+  stroke: rgba(68,191,252,0.8);
+  stroke-width: 1.1;
+  animation: misfitWobble 3.2s ease-in-out infinite;
+}
+.pain-icon-mismatch .path {
+  fill: none;
+  stroke: rgba(129,251,165,0.72);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 2 2;
+  animation: pathShift 2.8s linear infinite;
+}
+.pain-icon-mismatch .xmark {
+  stroke: rgba(255,132,150,0.85);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  animation: xPulse 2.2s ease-in-out infinite;
+}
+@keyframes nodeFloat { 0%,100%{transform:translateY(0)}50%{transform:translateY(-1.4px)} }
+@keyframes fragDrift { to { stroke-dashoffset: -10; } }
+@keyframes vaultPulse { 0%,100%{opacity:.78}50%{opacity:1} }
+@keyframes lockBlink { 0%,100%{opacity:.8}45%{opacity:1} }
+@keyframes frameRotate { to { transform: rotate(360deg); } }
+@keyframes misfitWobble { 0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-1px,1px) rotate(-7deg)} }
+@keyframes pathShift { to { stroke-dashoffset: 8; } }
+@keyframes xPulse { 0%,100%{opacity:.5}50%{opacity:.95} }
+.pain-card:hover .pain-icon-fragmented .frag-line { stroke: rgba(68,191,252,0.9); }
+.pain-card:hover .pain-icon-locked .vault { stroke: rgba(129,251,165,0.6); }
+.pain-card:hover .pain-icon-mismatch .fit-cube { stroke: rgba(129,251,165,0.84); }
+.pain-card:hover .pain-icon-mismatch .xmark { opacity: .9; }
 .pain-title { font-family: var(--ff-display); font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .pain-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
  
@@ -687,27 +808,30 @@ section { position: relative; }
 .author-title { font-family: var(--ff-mono); font-size: 10px; color: var(--muted); }
  
 /* ════════════════════════════════════════
-   SECTION 6 — THE INSIGHT
+   SECTION 6 — NUESTRA FILOSOFÍA
 ════════════════════════════════════════ */
 #insight {
-  padding: 140px 0;
+  padding: 120px 0;
   background: linear-gradient(to bottom, var(--obsidian), var(--carbon));
-  text-align: center;
   overflow: hidden;
+}
+.insight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 42px;
+  align-items: center;
 }
 .insight-overline {
   font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--cyan); margin-bottom: 40px; display: block;
+  text-transform: uppercase; color: var(--cyan); margin-bottom: 18px; display: block;
 }
 .insight-headline {
   font-family: var(--ff-display);
-  font-size: clamp(48px, 7vw, 96px);
-  font-weight: 700; line-height: 1.05; letter-spacing: -0.04em;
-  margin-bottom: 40px;
+  font-size: clamp(42px, 6vw, 78px);
+  font-weight: 700; line-height: 1.04; letter-spacing: -0.04em;
+  margin-bottom: 22px;
 }
-.insight-headline .underline-cyan {
-  position: relative; display: inline-block;
-}
+.insight-headline .underline-cyan { position: relative; display: inline-block; }
 .insight-headline .underline-cyan::after {
   content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
   height: 3px; background: var(--cyan);
@@ -715,23 +839,152 @@ section { position: relative; }
   transition: transform 0.8s ease 0.4s;
 }
 .insight-headline .underline-cyan.animated::after { transform: scaleX(1); }
- 
 .insight-body {
-  font-size: 20px; line-height: 1.75; color: var(--muted);
-  max-width: 680px; margin: 0 auto 48px;
+  font-size: 18px; line-height: 1.75; color: var(--muted);
+  max-width: 620px; margin: 0 0 20px;
 }
 .insight-support {
-  font-size: 17px;
-  line-height: 1.75;
-  color: rgba(236,240,255,0.72);
-  max-width: 760px;
-  margin: 0 auto 24px;
+  font-size: 15px; line-height: 1.75; color: rgba(236,240,255,0.76);
+  max-width: 640px; margin: 0 0 24px;
 }
-.insight-cta-wrap { margin-bottom: 28px; }
+.insight-cta-wrap { margin-bottom: 22px; }
 .insight-data-note {
-  font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.12em;
+  font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em;
   color: var(--cyan); border: 1px solid var(--border);
-  padding: 10px 20px; border-radius: 100px; display: inline-block;
+  padding: 10px 16px; border-radius: 100px; display: inline-block;
+}
+.insight-system {
+  background: rgba(18,18,22,0.75);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  backdrop-filter: blur(14px);
+}
+.insight-system-title {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.insight-flow-svg { width: 100%; height: auto; display: block; }
+.insight-flow-node { fill: rgba(68,191,252,0.2); stroke: rgba(68,191,252,0.78); stroke-width: 1.4; }
+.insight-flow-node.human { fill: rgba(129,251,165,0.2); stroke: rgba(129,251,165,0.88); }
+.insight-flow-node.roi { fill: rgba(92,65,255,0.2); stroke: rgba(92,65,255,0.88); }
+.insight-flow-link {
+  fill: none; stroke: rgba(68,191,252,0.75); stroke-width: 1.6;
+  stroke-dasharray: 6 6;
+  animation: insightFlow 6s linear infinite;
+}
+.insight-flow-link.valid { stroke: rgba(129,251,165,0.82); }
+.insight-flow-label {
+  font-family: var(--ff-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  fill: rgba(236,240,255,0.85);
+  text-transform: uppercase;
+}
+.insight-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.insight-chip {
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  border: 1px solid rgba(68,191,252,0.28);
+  background: rgba(68,191,252,0.08);
+  border-radius: 100px;
+  padding: 5px 10px;
+}
+@keyframes insightFlow { to { stroke-dashoffset: -48; } }
+
+/* ── TODOS LOS MATES ── */
+#mates {
+  padding: 110px 0;
+  background: var(--obsidian);
+}
+.mates-header { text-align: center; margin-bottom: 44px; }
+.mates-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+.mate-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 16px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.mate-card:hover { transform: translateY(-4px); border-color: rgba(68,191,252,0.44); box-shadow: 0 12px 34px rgba(68,191,252,0.12); }
+.mate-mark {
+  font-family: var(--ff-display);
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #81FBA5;
+}
+.mate-name {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.mate-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* ── INDUSTRIA SOLUCIONES ── */
+.market-solutions {
+  margin-top: 14px;
+  text-align: left;
+  border: 1px solid rgba(68,191,252,0.22);
+  border-radius: 10px;
+  background: rgba(11,11,11,0.34);
+}
+.market-solutions > summary {
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--ff-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: #81FBA5;
+  padding: 10px 12px;
+}
+.market-solutions > summary::-webkit-details-marker { display: none; }
+.market-solutions > summary::after { content: '▾'; float: right; color: var(--cyan); transition: transform 0.2s ease; }
+.market-solutions[open] > summary::after { transform: rotate(180deg); }
+.market-solutions ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 6px;
+}
+.market-solutions li {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(236,240,255,0.84);
+  padding-left: 10px;
+  position: relative;
+}
+.market-solutions li::before {
+  content: '';
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--cyan);
+  position: absolute; left: 0; top: 8px;
 }
  
 /* ════════════════════════════════════════
@@ -904,6 +1157,8 @@ section { position: relative; }
   .stat-card { flex: 1; min-width: 160px; }
   .problem-grid { grid-template-columns: 1fr; gap: 48px; }
   .solution-grid { grid-template-columns: 1fr; }
+  .insight-grid { grid-template-columns: 1fr; }
+  .mates-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .stat-row { grid-template-columns: repeat(2,1fr); }
   .testimonials { grid-template-columns: 1fr; }
   .markets-grid { grid-template-columns: repeat(2,1fr); }
@@ -917,6 +1172,9 @@ section { position: relative; }
   section { padding: 80px 0; }
   .hero-stats { flex-direction: column; }
   .hero-grid { gap: 32px; }
+  .btn-experts { font-size: 13px; padding: 12px 14px; white-space: normal; text-align: center; }
+  .insight-system { padding: 16px; }
+  .mates-grid { grid-template-columns: 1fr 1fr; }
   .stat-row { grid-template-columns: 1fr 1fr; }
   .markets-grid { grid-template-columns: 1fr 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
@@ -978,7 +1236,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   <a href="#solution" onclick="closeMobileMenu()">La Soluci&oacute;n</a>
   <a href="#how" onclick="closeMobileMenu()">C&oacute;mo Funciona</a>
   <a href="#markets" onclick="closeMobileMenu()">Industrias</a>
-  <a href="#contact" class="btn btn-mint" onclick="closeMobileMenu()">Hablar con un Experto &rarr;</a>
+  <a href="#contact" class="btn btn-mint btn-experts" onclick="closeMobileMenu()">Unirte a la Red de Expertos Validadores</a>
 </div>
  
 <!-- ════════════════════════════════════════
@@ -988,25 +1246,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   <div class="container">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <div class="logo-mark"><svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <!-- Outer enso stroke — open circle with tapered ends simulating brush -->
-  <path d="M17 3
-    C26.4 3 31 9.5 31 17
-    C31 24.5 25.8 31 17 31
-    C8.8 31 3 24.8 3 17
-    C3 9.5 8 4 14 3.2"
-    stroke="url(#ensoGrad)" stroke-width="3.5"
-    stroke-linecap="round" fill="none"/>
-  <!-- Inner accent dot -->
-  <circle cx="17" cy="17" r="2" fill="#00FF94" opacity="0.5"/>
-  <defs>
-    <linearGradient id="ensoGrad" x1="3" y1="17" x2="31" y2="17" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00FF94"/>
-      <stop offset="0.6" stop-color="#00D4FF"/>
-      <stop offset="1" stop-color="#00FF94" stop-opacity="0.3"/>
-    </linearGradient>
-  </defs>
-</svg></div>
+        <div class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M71 16 C61 11 49 10 39 13 C24 18 14 33 14 50 C14 70 30 86 50 86 C70 86 86 70 86 50 C86 44 84 38 82 33"
+              stroke="currentColor" stroke-width="12" stroke-linecap="round" class="enso-path"/>
+          </svg>
+        </div>
         <span class="logo-text">DataMate</span>
       </a>
       <ul class="nav-links">
@@ -1048,7 +1293,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         </p>
         <div class="hero-ctas" id="hero-ctas">
           <a href="#how" class="btn btn-mint btn-lg">Ver C&oacute;mo Funciona <span class="arrow-icon">&rarr;</span></a>
-          <a href="#contact" class="btn btn-ghost btn-lg">Hablar con un Experto</a>
+          <a href="#contact" class="btn btn-ghost btn-lg btn-experts">Unirte a la Red de Expertos Validadores</a>
         </div>
         <p class="hero-note" id="hero-note">Llamada de 30 min &middot; Sin compromiso &middot; Partner oficial DataRobot LatAm</p>
       </div>
@@ -1069,52 +1314,72 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </div>
     </div>
 
-<!-- Trust Carousel -->
-    <div class="logo-strip" aria-label="Empresas que conf&iacute;an en DataMate">
-      <p class="strip-label">Empresas que conf&iacute;an en DataMate</p>
-      <div class="carousel-viewport">
-        <!-- Track is duplicated exactly once for seamless infinite loop -->
-        <div class="carousel-track" aria-hidden="true">
-          <!-- Set A -->
-          <span class="brand-mark brand-highlight">DataRobot</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">GTD</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">RyQ</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">C&aacute;mara IA Chilena</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark brand-highlight">DataRobot</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">GTD</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">RyQ</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">C&aacute;mara IA Chilena</span>
-          <span class="brand-sep"></span>
-          <!-- Set B (duplicate — keeps loop seamless) -->
-          <span class="brand-mark brand-highlight">DataRobot</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">GTD</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">RyQ</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">C&aacute;mara IA Chilena</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark brand-highlight">DataRobot</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">GTD</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">RyQ</span>
-          <span class="brand-sep"></span>
-          <span class="brand-mark">C&aacute;mara IA Chilena</span>
-          <span class="brand-sep"></span>
+    <!-- Logo strip -->
+    <div class="logo-strip">
+      <div class="logo-strip-inner">
+        <span class="strip-label">En uso con metodolog&iacute;a validada:</span>
+        <div class="strip-logos">
+          <span class="strip-logo highlight">DataRobot</span>
+          <span class="strip-logo">GTD</span>
+          <span class="strip-logo">RyQ</span>
+          <span class="strip-logo">DataRobot</span>
+          <span class="strip-logo">Cámara de Inteligencia Artificial Chilena</span>
+          <span class="strip-logo">GTD</span>
         </div>
       </div>
     </div>
   </div>
 </section>
  
+<!-- ════════════════════════════════════════
+     SECTION 2 — NUESTRA FILOSOFÍA
+════════════════════════════════════════ -->
+<section id="insight">
+  <div class="container insight-grid">
+    <div>
+      <span class="insight-overline reveal">Nuestra Filosof&iacute;a</span>
+      <h2 class="insight-headline reveal" id="insight-h">
+        No reemplazamos<br>a los humanos.<br>
+        Los <span class="underline-cyan" id="insight-uw">integramos.</span>
+      </h2>
+      <p class="insight-body reveal">
+        DataMate orquesta una red de expertos contribuidores que valida outputs de modelos IA, enriquece datasets y acelera mejoras de precisi&oacute;n con impacto directo en ROI empresarial.
+      </p>
+      <p class="insight-support reveal">
+        Cada iteraci&oacute;n conecta conocimiento de dominio, validaci&oacute;n humana y aprendizaje continuo del modelo para que la IA responda mejor a operaciones reales.
+      </p>
+      <div class="insight-cta-wrap reveal">
+        <a href="https://forms.gle/3h5bWU6j11FWubn96" target="_blank" rel="noopener noreferrer" class="btn btn-mint btn-lg">Unirte a la Red de Expertos Validadores</a>
+      </div>
+      <div class="reveal">
+        <span class="insight-data-note">Ciclo DataMate: Expertos &middot; Validaci&oacute;n &middot; Dataset enriquecido &middot; Precisi&oacute;n &middot; ROI</span>
+      </div>
+    </div>
+    <div class="insight-system reveal">
+      <p class="insight-system-title">Sistema de orquestaci&oacute;n DataMate</p>
+      <svg class="insight-flow-svg" viewBox="0 0 520 320" role="img" aria-label="Flujo de expertos validando modelos para mejorar precisión y generar ROI">
+        <path class="insight-flow-link" d="M62 88 C142 88 160 128 226 130"></path>
+        <path class="insight-flow-link valid" d="M232 130 C292 132 306 176 362 178"></path>
+        <path class="insight-flow-link" d="M368 178 C432 180 444 222 488 236"></path>
+        <circle class="insight-flow-node human" cx="58" cy="88" r="22"></circle>
+        <circle class="insight-flow-node" cx="230" cy="130" r="24"></circle>
+        <circle class="insight-flow-node" cx="364" cy="178" r="24"></circle>
+        <circle class="insight-flow-node roi" cx="488" cy="236" r="22"></circle>
+        <text class="insight-flow-label" x="28" y="92">Expertos</text>
+        <text class="insight-flow-label" x="180" y="134">Validaci&oacute;n</text>
+        <text class="insight-flow-label" x="318" y="182">Dataset + Modelo</text>
+        <text class="insight-flow-label" x="470" y="240">ROI</text>
+      </svg>
+      <div class="insight-chip-row">
+        <span class="insight-chip">SME Network</span>
+        <span class="insight-chip">RLHF aplicado</span>
+        <span class="insight-chip">Precisi&oacute;n creciente</span>
+        <span class="insight-chip">Impacto medible</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════════════════════════════════════════
      SECTION 2 &mdash; THE PROBLEM
 ════════════════════════════════════════ -->
@@ -1151,18 +1416,50 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 
         <div class="pain-cards">
           <div class="pain-card reveal">
+            <div class="pain-icon pain-icon-fragmented" aria-hidden="true">
+              <svg class="pain-svg" viewBox="0 0 30 30" role="presentation">
+                <line class="frag-line" x1="5" y1="8" x2="12" y2="11"></line>
+                <line class="frag-line cut" x1="17" y1="10" x2="24" y2="8"></line>
+                <line class="frag-line cut" x1="7" y1="22" x2="12" y2="18"></line>
+                <line class="frag-line" x1="18" y1="20" x2="24" y2="24"></line>
+                <circle class="node n1" cx="4.5" cy="8" r="2"></circle>
+                <circle class="node n2" cx="13" cy="11.2" r="1.8"></circle>
+                <circle class="node n3" cx="16.8" cy="9.7" r="1.7"></circle>
+                <circle class="node n4" cx="25" cy="8.2" r="2"></circle>
+                <circle class="node n5" cx="6.7" cy="22.5" r="1.9"></circle>
+                <circle class="node n6" cx="13.2" cy="17.6" r="1.7"></circle>
+                <circle class="node n7" cx="18.4" cy="19.6" r="1.8"></circle>
+                <circle class="node n8" cx="25.1" cy="24.4" r="2"></circle>
+              </svg>
+            </div>
             <div>
               <p class="pain-title">Datos fragmentados</p>
               <p class="pain-body">Distribuidos en m&uacute;ltiples nubes, silos y sistemas. Pipelines rotos, duplicidad y sin trazabilidad: el modelo aprende inconsistencias.</p>
             </div>
           </div>
           <div class="pain-card reveal">
+            <div class="pain-icon pain-icon-locked" aria-hidden="true">
+              <svg class="pain-svg" viewBox="0 0 30 30" role="presentation">
+                <rect class="frame" x="4.5" y="4.5" width="21" height="21" rx="4"></rect>
+                <rect class="vault" x="8" y="12" width="14" height="11" rx="2.5"></rect>
+                <path class="lock" d="M11.7 12v-1.8a3.3 3.3 0 0 1 6.6 0V12h-1.8v-1.6a1.5 1.5 0 0 0-3 0V12h-1.8zm2.6 4.1a1.7 1.7 0 1 1 2 2.7v1.7h-2v-1.7a1.7 1.7 0 0 1 0-2.7z"></path>
+              </svg>
+            </div>
             <div>
               <p class="pain-title">Datos regulados que no puedes usar</p>
               <p class="pain-body">Privacidad, compliance y seguridad limitan el entrenamiento en entornos reales. HIPAA, GDPR, PCI DSS, normativas locales.</p>
             </div>
           </div>
           <div class="pain-card reveal">
+            <div class="pain-icon pain-icon-mismatch" aria-hidden="true">
+              <svg class="pain-svg" viewBox="0 0 30 30" role="presentation">
+                <circle class="target" cx="21.7" cy="8.4" r="4.1"></circle>
+                <path class="path" d="M6.4 22.6c4.2-4 7.3-8.4 13.5-11"></path>
+                <rect class="fit-cube" x="6" y="17.5" width="7" height="7" rx="1.2"></rect>
+                <line class="xmark" x1="19.3" y1="6" x2="24.2" y2="10.8"></line>
+                <line class="xmark" x1="24.2" y1="6" x2="19.3" y2="10.8"></line>
+              </svg>
+            </div>
             <div>
               <p class="pain-title">Modelos gen&eacute;ricos que fallan en tu caso</p>
               <p class="pain-body">Etiquetas imperfectas, sesgo y "ground truth" inconsistente. Los equipos pierden tiempo validando en lugar de construir.</p>
@@ -1199,6 +1496,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">01 &mdash; SIMULAR</span>
         <canvas class="sol-3d" id="sol-canvas-1" aria-hidden="true"></canvas>
+        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Generaci&oacute;n de Datos Sint&eacute;ticos</h3>
         <p class="sol-body">Generamos datasets de entrenamiento de alta calidad, incluso cuando los datos reales son escasos, regulados o simplemente no est&aacute;n disponibles. Privacy-safe por dise&ntilde;o.</p>
         <div class="sol-tags">
@@ -1211,6 +1509,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">02 &mdash; VALIDAR</span>
         <canvas class="sol-3d" id="sol-canvas-2" aria-hidden="true"></canvas>
+        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Red de Expertos Humanos</h3>
         <p class="sol-body">Especialistas de dominio en finanzas, salud, legal y tecnolog&iacute;a validan cada escenario. Conocimiento real. Feedback real. Incentivos alineados para sostener calidad a escala.</p>
         <div class="sol-tags">
@@ -1223,6 +1522,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       <div class="sol-card reveal">
         <span class="sol-card-num">03 &mdash; ENTRENAR</span>
         <canvas class="sol-3d" id="sol-canvas-3" aria-hidden="true"></canvas>
+        <div class="sol-icon-wrap"></div>
         <h3 class="sol-title">Modelos IA Listos para Producci&oacute;n</h3>
         <p class="sol-body">Modelos empresariales entrenados sobre datos confiables que realmente funcionan en el mundo real &mdash; no solo en demos. Auditables, explicables y medibles.</p>
         <div class="sol-tags">
@@ -1528,28 +1828,53 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 </section>
 
 <!-- ════════════════════════════════════════
-     SECTION 6 &mdash; THE INSIGHT
+     SECTION 7 — TODOS LOS MATES
 ════════════════════════════════════════ -->
-<section id="insight">
+<section id="mates">
   <div class="container">
-    <span class="insight-overline reveal">Nuestra Filosof&iacute;a</span>
-    <h2 class="insight-headline reveal" id="insight-h">
-      No reemplazamos<br>a los humanos.<br>
-      Los <span class="underline-cyan" id="insight-uw">integramos.</span>
-    </h2>
-    <p class="insight-body reveal">
-      Mientras el mundo debate si la IA eliminar&aacute; empleos, la evidencia muestra algo diferente: mientras m&aacute;s avanzada es la IA, m&aacute;s necesita del expertise humano para mejorar. DataMate es donde ese expertise vive.
-    </p>
-    <p class="insight-support reveal">
-      &iquest;Te gustar&iacute;a formar parte de esta red de humanos validadores y ganar dinero en paralelo entrenando IA en proyectos reales como los de Anthropic?
-    </p>
-    <div class="insight-cta-wrap reveal">
-      <a href="https://forms.gle/3h5bWU6j11FWubn96" target="_blank" rel="noopener noreferrer" class="btn btn-mint btn-lg">Form Inscripci&oacute;n EC&rsquo;s</a>
+    <div class="mates-header">
+      <span class="eyebrow reveal">Ecosistema</span>
+      <h2 class="section-title reveal">Todos los <span class="cyan">Mates</span></h2>
+      <p class="section-sub reveal" style="margin:0 auto;text-align:center">
+        Un ecosistema colaborativo para acelerar adopci&oacute;n de IA: conocimiento, comunidad, ejecuci&oacute;n y despliegue empresarial.
+      </p>
     </div>
-    <div class="reveal">
-      <span class="insight-data-note">
-        Metodolog&iacute;a: RLHF &mdash; Aprendizaje por Refuerzo con Retroalimentaci&oacute;n Humana
-      </span>
+    <div class="mates-grid">
+      <article class="mate-card reveal">
+        <div class="mate-mark">DM</div>
+        <div>
+          <h3 class="mate-name">DataMate</h3>
+          <p class="mate-sub">Red de expertos contribuidores y validaci&oacute;n avanzada para IA enterprise.</p>
+        </div>
+      </article>
+      <article class="mate-card reveal">
+        <div class="mate-mark">ED</div>
+        <div>
+          <h3 class="mate-name">EffinData</h3>
+          <p class="mate-sub">Operaci&oacute;n de datos y ejecuci&oacute;n anal&iacute;tica para equipos de alto impacto.</p>
+        </div>
+      </article>
+      <article class="mate-card reveal">
+        <div class="mate-mark">IAZ</div>
+        <div>
+          <h3 class="mate-name">IA a la Z</h3>
+          <p class="mate-sub">Contenido y comunidad para traducir IA a decisiones de negocio reales.</p>
+        </div>
+      </article>
+      <article class="mate-card reveal">
+        <div class="mate-mark">CCIA</div>
+        <div>
+          <h3 class="mate-name">C&aacute;mara Chilena de Inteligencia Artificial</h3>
+          <p class="mate-sub">Articulaci&oacute;n del ecosistema local para colaboraci&oacute;n, est&aacute;ndares y crecimiento.</p>
+        </div>
+      </article>
+      <article class="mate-card reveal">
+        <div class="mate-mark">DR</div>
+        <div>
+          <h3 class="mate-name">DataRobot Partner Ecosystem</h3>
+          <p class="mate-sub">Plataforma, tooling y soporte para llevar modelos alineados a producci&oacute;n.</p>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -1571,6 +1896,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <span class="market-icon">💳</span>
         <h3 class="market-title">Servicios Financieros</h3>
         <p class="market-desc">Datos propietarios, requisitos de compliance y complejidad de dominio. Scoring crediticio, detecci&oacute;n de fraude, riesgo operacional.</p>
+        <details class="market-solutions">
+          <summary>Ver soluciones</summary>
+          <ul>
+            <li>Scoring crediticio</li>
+            <li>Detecci&oacute;n de fraude</li>
+            <li>Riesgo operacional</li>
+            <li>Validaci&oacute;n de modelos regulatorios</li>
+          </ul>
+        </details>
         <div class="market-micro">
           <span class="market-micro-text">HIPAA &middot; GDPR &middot; PCI DSS</span>
         </div>
@@ -1579,6 +1913,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <span class="market-icon">🏥</span>
         <h3 class="market-title">Salud</h3>
         <p class="market-desc">Datos regulados, sensibles y con decisiones de vida o muerte. Modelos cl&iacute;nicos que requieren validaci&oacute;n humana especializada.</p>
+        <details class="market-solutions">
+          <summary>Ver soluciones</summary>
+          <ul>
+            <li>Predicci&oacute;n cl&iacute;nica</li>
+            <li>Clasificaci&oacute;n de documentos m&eacute;dicos</li>
+            <li>Validaci&oacute;n de datasets sensibles</li>
+            <li>An&aacute;lisis asistido para flujos cl&iacute;nicos</li>
+          </ul>
+        </details>
         <div class="market-micro">
           <span class="market-micro-text">Privacy-safe &middot; Auditable</span>
         </div>
@@ -1587,6 +1930,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <span class="market-icon">⚖️</span>
         <h3 class="market-title">Legal Tech</h3>
         <p class="market-desc">Conocimiento especializado que los modelos gen&eacute;ricos no tienen. Contratos, compliance regulatorio, due diligence.</p>
+        <details class="market-solutions">
+          <summary>Ver soluciones</summary>
+          <ul>
+            <li>Revisi&oacute;n contractual</li>
+            <li>Due diligence</li>
+            <li>Clasificaci&oacute;n documental</li>
+            <li>Compliance regulatorio</li>
+          </ul>
+        </details>
         <div class="market-micro">
           <span class="market-micro-text">SME Annotation &middot; RLHF</span>
         </div>
@@ -1595,6 +1947,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <span class="market-icon">📶</span>
         <h3 class="market-title">Telecom</h3>
         <p class="market-desc">Churn prediction, optimizaci&oacute;n de red y personalizaci&oacute;n a escala. Comportamiento multisistema: app, call center, red, facturaci&oacute;n.</p>
+        <details class="market-solutions">
+          <summary>Ver soluciones</summary>
+          <ul>
+            <li>Churn prediction</li>
+            <li>Optimizaci&oacute;n de red</li>
+            <li>Segmentaci&oacute;n avanzada</li>
+            <li>Forecast de demanda</li>
+          </ul>
+        </details>
         <div class="market-micro">
           <span class="market-micro-text">Churn &middot; Forecasting &middot; UX</span>
         </div>
@@ -1678,18 +2039,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
     <div class="footer-grid">
       <div>
         <div class="nav-logo" style="margin-bottom:0">
-          <div class="logo-mark"><svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path d="M17 3 C26.4 3 31 9.5 31 17 C31 24.5 25.8 31 17 31 C8.8 31 3 24.8 3 17 C3 9.5 8 4 14 3.2"
-    stroke="url(#ensoGradF)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-  <circle cx="17" cy="17" r="2" fill="#00FF94" opacity="0.5"/>
-  <defs>
-    <linearGradient id="ensoGradF" x1="3" y1="17" x2="31" y2="17" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00FF94"/>
-      <stop offset="0.6" stop-color="#00D4FF"/>
-      <stop offset="1" stop-color="#00FF94" stop-opacity="0.3"/>
-    </linearGradient>
-  </defs>
-</svg></div>
+          <div class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M71 16 C61 11 49 10 39 13 C24 18 14 33 14 50 C14 70 30 86 50 86 C70 86 86 70 86 50 C86 44 84 38 82 33"
+                stroke="currentColor" stroke-width="12" stroke-linecap="round" class="enso-path"/>
+            </svg>
+          </div>
           <span class="logo-text">DataMate</span>
         </div>
         <p class="footer-brand-desc">
@@ -1698,6 +2053,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
         <p class="footer-tagline">
           "El futuro de la IA no lo definir&aacute;n<br>los mejores modelos, sino los datos m&aacute;s confiables."
         </p>
+        <div style="margin-top:20px">
+          <p class="footer-col-title" style="margin-bottom:10px">Oficinas</p>
+          <p class="footer-brand-desc" style="margin:0 0 10px">
+            <strong style="color:#fff">Chile:</strong> Santiago de Chile, Vitacura
+          </p>
+          <p class="footer-brand-desc" style="margin:0">
+            <strong style="color:#fff">Panam&aacute;:</strong> Ciudad de Panam&aacute;, Panam&aacute;
+          </p>
+        </div>
       </div>
       <div>
         <p class="footer-col-title">Plataforma</p>
@@ -1747,16 +2111,24 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 <!-- ════════════════════════════════════════
      SCRIPTS (CDN first, then inline)
 ════════════════════════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
 <script>
 /* cursor removed — native OS cursor restored */
  
 /* ── NAV SCROLL ── */
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
- 
+let navScrollTick = false;
+window.addEventListener('scroll', () => {
+  if (navScrollTick) return;
+  navScrollTick = true;
+  requestAnimationFrame(() => {
+    nav.classList.toggle('scrolled', scrollY > 60);
+    navScrollTick = false;
+  });
+}, { passive: true });
+
 /* ── MOBILE MENU ── */
 document.getElementById('nav-hamburger').onclick = () => document.getElementById('mobile-menu').classList.add('open');
 document.getElementById('menu-close').onclick = closeMobileMenu;
@@ -1794,13 +2166,14 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
     renderer.setSize(W, H, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     setHeroComposition();
-    camera.aspect = W / H;
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
   resize(); window.addEventListener('resize', resize);
  
   /* Nodes */
-  const NODE_COUNT = window.innerWidth < 768 ? 56 : 170;
+  const viewportWidth = window.innerWidth;
+  const NODE_COUNT = viewportWidth > 1200 ? 96 : viewportWidth > 768 ? 64 : 36;
   const nodes = [];
   const nodeGeo = new THREE.SphereGeometry(0.12, 8, 8);
   for (let i = 0; i < NODE_COUNT; i++) {
@@ -1821,8 +2194,8 @@ function closeMobileMenu() { document.getElementById('mobile-menu').classList.re
   }
  
   /* Connections — single LineSegments buffer, no per-frame allocations */
-  const CONNECT_DIST = 6;
-  const MAX_LINES = 760;
+  const CONNECT_DIST = viewportWidth > 768 ? 5.8 : 5.2;
+  const MAX_LINES = viewportWidth > 1200 ? 360 : viewportWidth > 768 ? 220 : 120;
   const linePositions = new Float32Array(MAX_LINES * 6);
   const lineGeo = new THREE.BufferGeometry();
   lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
@@ -2170,12 +2543,13 @@ if (contactForm) {
     window.open(calendarUrl, '_blank', 'noopener,noreferrer');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
-    // Replace with your actual form endpoint (Formspree, Netlify Forms, etc.)
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', body: new FormData(contactForm) })
     setTimeout(() => {
-      btn.textContent = 'Mensaje enviado — te contactamos pronto';
+      btn.textContent = 'Gracias, te redirigimos para agendar tu llamada';
       btn.style.background = 'var(--mint)';
-    }, 1200);
+    }, 900);
+    setTimeout(() => {
+      window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+    }, 1400);
   });
 }
  
