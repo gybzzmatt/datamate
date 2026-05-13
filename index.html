@@ -626,17 +626,31 @@ section { position: relative; }
 .int-logo-grid { display: flex; flex-direction: column; gap: 10px; }
 .int-logo-row  { display: flex; gap: 10px; }
 .int-logo-cell {
-  flex: 1; height: 44px; display: flex; align-items: center; justify-content: center;
+  flex: 1 1 0; min-width: 0; height: 52px; display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09);
   border-radius: 8px; transition: border-color .3s, background .3s;
-  padding: 0 10px; overflow: hidden;
+  padding: 6px 12px; overflow: hidden;
 }
 .int-logo-cell:hover {
   border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07);
 }
-.int-logo-cell svg { max-width: 100%; max-height: 26px; }
+.int-logo-cell svg {
+  display: block;
+  width: 100%; height: 100%;
+  max-width: 100%; max-height: 32px;
+  object-fit: contain;
+}
 @media (max-width:1024px) { .dr-what-grid { grid-template-columns: 1fr; } }
-@media (max-width:768px)  { .dr-what-grid { grid-template-columns: 1fr; } }
+@media (max-width:768px)  {
+  .dr-what-grid { grid-template-columns: 1fr; }
+  .int-logo-cell { height: 56px; padding: 8px 14px; }
+  .int-logo-cell svg { max-height: 36px; }
+}
+@media (max-width:480px) {
+  .int-logo-row { gap: 8px; }
+  .int-logo-cell { height: 52px; padding: 6px 10px; }
+  .int-logo-cell svg { max-height: 32px; }
+}
 
 #proof {
   padding: 120px 0;
@@ -724,41 +738,91 @@ section { position: relative; }
   background: var(--obsidian);
 }
 .mates-header { text-align: center; margin-bottom: 44px; }
-.mates-grid {
+.mates-logo-wall {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
 }
-.mate-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 16px;
-  min-height: 140px;
+.mate-logo {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(245,250,255,0.78) 55%, rgba(230,242,255,0.85) 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 18px;
+  height: 120px;
+  padding: 20px 26px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.35) inset,
+    0 10px 30px rgba(8,15,30,0.35),
+    0 2px 6px rgba(8,15,30,0.25);
+  transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease, border-color 0.4s ease;
 }
-.mate-card:hover { transform: translateY(-4px); border-color: rgba(68,191,252,0.44); box-shadow: 0 12px 34px rgba(68,191,252,0.12); }
-.mate-mark {
-  font-family: var(--ff-display);
-  font-size: 16px;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-  color: #81FBA5;
+/* Top gloss highlight */
+.mate-logo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 70% at 50% -20%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 40%);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
 }
-.mate-name {
-  font-family: var(--ff-display);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.25;
+/* Specular sweep on hover */
+.mate-logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-18deg);
+  transition: left 0.7s ease;
+  pointer-events: none;
+  z-index: 2;
 }
-.mate-sub {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-top: 8px;
+.mate-logo:focus-visible {
+  outline: 2px solid var(--accent, #44bffc);
+  outline-offset: 3px;
+}
+.mate-logo img {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.45s cubic-bezier(.2,.8,.2,1);
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.6));
+}
+.mate-logo:hover {
+  transform: translateY(-6px);
+  border-color: rgba(68,191,252,0.65);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(255,255,255,0.4) inset,
+    0 22px 50px rgba(68,191,252,0.28),
+    0 6px 14px rgba(8,15,30,0.35);
+}
+.mate-logo:hover::after {
+  left: 130%;
+}
+.mate-logo:hover img {
+  transform: scale(1.06);
 }
  
 /* ════════════════════════════════════════
@@ -983,7 +1047,7 @@ section { position: relative; }
   .testimonials { grid-template-columns: 1fr; }
   .markets-grid { grid-template-columns: repeat(2,1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .mates-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .mates-logo-wall { grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
 @media (max-width: 768px) {
   #hero-canvas { right: -34%; top: -6%; width: 98%; height: 112%; opacity: 0.42; }
@@ -1027,7 +1091,8 @@ section { position: relative; }
   .market-card { padding: 22px 14px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; margin-bottom: 32px; }
   .footer-bot { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .mates-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mates-logo-wall { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mate-logo { height: 88px; padding: 16px 18px; }
   .form-grid { grid-template-columns: 1fr; }
   .contact-form { padding: 28px 20px; }
   .contact-trust { gap: 14px; }
@@ -1054,7 +1119,7 @@ section { position: relative; }
   .hero-ctas .btn { width: 100%; }
   .stat-row { grid-template-columns: 1fr; }
   .markets-grid { grid-template-columns: 1fr; }
-  .mates-grid { grid-template-columns: 1fr; }
+  .mates-logo-wall { grid-template-columns: 1fr 1fr; }
   .footer-legal-links { flex-wrap: wrap; gap: 12px; }
   .partner-block { flex-direction: column; align-items: flex-start; }
   .partner-logo-wrap { flex-wrap: wrap; }
@@ -1160,8 +1225,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
       </ul>
       <div class="nav-cta">
         <a href="https://www.datarobot.com/partner-finder/?filter_partner_tier=1" target="_blank" rel="noopener noreferrer" class="nav-partner">DataRobot LatAm Partner</a>
-        <a href="#contact" class="btn btn-ghost-mint">Contacto</a>
-        <a href="https://calendar.app.google/hvtJE9uxKB9j1h7A7" target="_blank" rel="noopener noreferrer" class="btn btn-mint" style="background:#00E5A0;color:#0B0B0B;border-radius:8px;padding:8px 16px;">Agenda diagn&oacute;stico &rarr;</a>
+        <a href="#contact" class="btn btn-ghost-mint">Agendar Diagn&oacute;stico</a>
+        
       </div>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir men&uacute;">
         <span></span><span></span><span></span>
@@ -1660,47 +1725,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   <div class="container">
     <div class="mates-header">
       <span class="eyebrow reveal">Ecosistema</span>
-      <h2 class="section-title reveal">Todos los <span class="cyan">Mates</span></h2>
+      <h2 class="section-title reveal">Nuestros <span class="cyan">Mates</span></h2>
       <p class="section-sub reveal" style="margin:0 auto;text-align:center">
         Un ecosistema colaborativo para acelerar adopci&oacute;n de IA: conocimiento, comunidad, ejecuci&oacute;n y despliegue empresarial.
       </p>
     </div>
-    <div class="mates-grid">
-      <article class="mate-card reveal">
-        <div class="mate-mark">DM</div>
-        <div>
-          <h3 class="mate-name">DataMate</h3>
-          <p class="mate-sub">Red de expertos contribuidores y validaci&oacute;n avanzada para IA enterprise.</p>
-        </div>
-      </article>
-      <article class="mate-card reveal">
-        <div class="mate-mark">ED</div>
-        <div>
-          <h3 class="mate-name">EffinData</h3>
-          <p class="mate-sub">Operaci&oacute;n de datos y ejecuci&oacute;n anal&iacute;tica para equipos de alto impacto.</p>
-        </div>
-      </article>
-      <article class="mate-card reveal">
-        <div class="mate-mark">IAZ</div>
-        <div>
-          <h3 class="mate-name">IA a la Z</h3>
-          <p class="mate-sub">Contenido y comunidad para traducir IA a decisiones de negocio reales.</p>
-        </div>
-      </article>
-      <article class="mate-card reveal">
-        <div class="mate-mark">CCIA</div>
-        <div>
-          <h3 class="mate-name">C&aacute;mara Chilena de Inteligencia Artificial</h3>
-          <p class="mate-sub">Articulaci&oacute;n del ecosistema local para colaboraci&oacute;n, est&aacute;ndares y crecimiento.</p>
-        </div>
-      </article>
-      <article class="mate-card reveal">
-        <div class="mate-mark">DR</div>
-        <div>
-          <h3 class="mate-name">DataRobot Partner Ecosystem</h3>
-          <p class="mate-sub">Plataforma, tooling y soporte para llevar modelos alineados a producci&oacute;n.</p>
-        </div>
-      </article>
+    <div class="mates-logo-wall">
+      <a class="mate-logo reveal" href="https://snorkel.ai/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de Snorkel"><img src="/logos/mates/snorkel.png" alt="Snorkel" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://www.innova360.cl/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de Innova360"><img src="/logos/mates/innova360.png" alt="Innova360" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://anid.cl/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de ANID"><img src="/logos/mates/anid.png" alt="ANID — Agencia Nacional de Investigaci&oacute;n y Desarrollo" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://glaix.ai/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de GLAIX"><img src="/logos/mates/glaix.png" alt="GLAIX" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://centrodeinnovacion.uc.cl/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio del Centro de Innovaci&oacute;n UC Anacleto Angelini"><img src="/logos/mates/ciuc-angelini.png" alt="Centro de Innovaci&oacute;n UC Anacleto Angelini" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://www.geainternacional.com/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de GEA Internacional"><img src="/logos/mates/gea.png" alt="GEA Internacional" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://www.cchia.cl/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de CCHIA"><img src="/logos/mates/cchia.png" alt="C&aacute;mara Chilena de Inteligencia Artificial" loading="lazy"></a>
+      <a class="mate-logo reveal" href="https://www.ryq.cl/" target="_blank" rel="noopener noreferrer" aria-label="Visitar sitio de R&amp;Q Ingenier&iacute;a"><img src="/logos/mates/rq-ingenieria.png" alt="R&amp;Q Ingenier&iacute;a" loading="lazy"></a>
     </div>
   </div>
 </section>
